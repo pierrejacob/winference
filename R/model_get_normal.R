@@ -27,20 +27,34 @@ get_normal <- function(){
     logdensities <- logdensities + dgamma(thetaparticles[,2], shape = parameters$alpha, rate = parameters$beta, log = TRUE)
     return(logdensities)
   }
+  # log-likelihood, available here and used to run MCMC
+  loglikelihood <- function(thetaparticles, observation, ...){
+    logdensities <- dnorm(observation, mean = thetaparticles[,1],
+                          sd = thetaparticles[,2], log = TRUE)
+    return(logdensities)
+  }
   # generate random variables used to compute a synthetic dataset
   generate_randomness <- function(nobservations){
     return(rnorm(nobservations))
   }
-  # function to compute a dataset for each theta value
-  robservation <- function(nobservations, theta, parameters, randomness){
+  # function to compute a dataset for each theta value, given fixed randomness
+  robservation_given_randomness <- function(nobservations, theta, parameters, randomness){
     observations <- theta[1] + randomness * theta[2]
     return(observations)
   }
+  # function to generate a dataset
+  robservation <- function(nobservations, theta, parameters){
+    observations <- theta[1] + rnorm(nobservations) * theta[2]
+    return(observations)
+  }
+
   parameters <- list(mu_0 = 0, nu = 1, alpha = 2, beta = 1)
   #
   model <- list(rprior = rprior,
                 dprior = dprior,
+                loglikelihood = loglikelihood,
                 generate_randomness = generate_randomness,
+                robservation_given_randomness = robservation_given_randomness,
                 robservation = robservation,
                 parameter_names = c("mu", "sigma"),
                 parameters = parameters,

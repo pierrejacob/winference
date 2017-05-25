@@ -21,4 +21,3 @@ Important references are
 
 - Cuturi, M. and Doucet, A. (2014). Fast computation of Wasserstein barycenters. In Proceedings of the 31st International Conference on Machine Learning (ICML), pages 685–693.
 }
-

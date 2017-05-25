@@ -9,4 +9,3 @@ setmytheme()
 \description{
 set theme for ggplot, to create consistent figures
 }
-

@@ -18,4 +18,3 @@ This function returns a list representing
 a Lotka-Volterra type model for plankton. See
 Jones, E., Parslow, J., and Murray, L. (2010). A Bayesian approach to state and parameter estimation in a phytoplankton-zooplankton model. Australian Meteorological and Oceanographic Journal, 59:7–16.
 }
-

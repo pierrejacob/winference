@@ -23,12 +23,14 @@ mhrhit_step_onetheta <- function(theta, distance, compute_d, target, param_algo)
   # hit, and also allows to not sample from parameters outside the admissible range
   associated_priors <- c()
   #
+  ncomputed <- 0
   while (nhits < R && nproposals < maxtrials){
     theta_prop <- proposal$r(theta, proposal$param_prop)
     prior_prop <- target$dprior(theta_prop, target$parameters)
     dproposed <- Inf
     if (!is.infinite(prior_prop)){
       dproposed <- compute_d(theta_prop)
+      ncomputed <- ncomputed + 1
     }
     if (is.na(dproposed)){
       dproposed <- Inf
@@ -48,7 +50,7 @@ mhrhit_step_onetheta <- function(theta, distance, compute_d, target, param_algo)
   # choose one of the succesful proposed parameter, except not the last one
   if (nproposals == maxtrials){
     cat("first while loop takes too long, let's reject\n")
-    return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = NA))
+    return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = NA, ncomputed = ncomputed))
   } else {
     L <- sample(x = hit_indices[1:(length(hit_indices)-1)], size = 1)
     if (length(hit_indices) == 2){
@@ -69,6 +71,7 @@ mhrhit_step_onetheta <- function(theta, distance, compute_d, target, param_algo)
       prior_prop <- target$dprior(theta_prop, target$parameters)
       if (!is.infinite(prior_prop[1])){
         dproposed <- compute_d(theta_prop)
+        ncomputed <- ncomputed + 1
       } else {
         dproposed <- Inf
       }
@@ -81,7 +84,7 @@ mhrhit_step_onetheta <- function(theta, distance, compute_d, target, param_algo)
     }
     if (ncurrent == maxtrials){
       cat("second while loop takes too long, let's reject\n")
-      return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent))
+      return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent, ncomputed = ncomputed))
     } else {
       logratio <- associated_prior_L - (prior_current) +
         (prop_current - proposal$d(theta_L, proposal$param_prop)) + log(ncurrent/(nproposals-1))
@@ -89,9 +92,9 @@ mhrhit_step_onetheta <- function(theta, distance, compute_d, target, param_algo)
       if (accepted){
         theta <- theta_L
         distance <- associated_distance_L
-        return(list(accepted = accepted, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent))
+        return(list(accepted = accepted, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent, ncomputed = ncomputed))
       } else {
-        return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent))
+        return(list(accepted = FALSE, theta = theta, distance = distance, nproposals = nproposals, ncurrent = ncurrent, ncomputed = ncomputed))
       }
     }
   }
@@ -103,14 +106,15 @@ mh_rhit_step <- function(thetas, distances, compute_d, target, param_algo){
     theta <- thetas[i,]
     distance <- distances[i]
     res <- mhrhit_step_onetheta(theta, distance, compute_d, target, param_algo)
-    matrix(c(res$theta, res$distance, res$accepted), nrow = 1)
+    matrix(c(res$theta, res$distance, res$accepted, res$ncomputed), nrow = 1)
   }
   # print("finished")
+  ncomputed <- sum(res_foreach[,(target$thetadim+3)])
   accepts <- res_foreach[,(target$thetadim+2)]
   thetas <- res_foreach[,(1:target$thetadim)]
   distances <- res_foreach[,(target$thetadim+1)]
   # accepts <- res_foreach[,(target$thetadim+2)]
-  return(list(acceptrate = mean(accepts), thetas = thetas, distances = distances))
+  return(list(acceptrate = mean(accepts), thetas = thetas, distances = distances, ncomputed = ncomputed))
 }
 
 

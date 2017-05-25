@@ -27,5 +27,5 @@ IntegerVector systematic_resampling_n_(const NumericVector & weights, int ndraws
   //     i--;
   //   }
   // }
-  return ancestors;
+  return ancestors + 1;
 }

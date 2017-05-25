@@ -9,4 +9,3 @@ wcovariance(xparticles, normweights, mean)
 \description{
 wcovariance
 }
-

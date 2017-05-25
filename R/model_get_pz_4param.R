@@ -46,12 +46,34 @@ get_pz_4param <- function(){
     }
     return(log_obs)
   }
+  ### additional functions to run PMMH
+  rinit <- function(nparticles, theta, rand, ...){
+    return(exp(matrix(log(2) + rand[1:(2*nparticles)], nrow = 2)))
+  }
+  rtransition <- function(xparticles, theta, time, rand, ...){
+    nparticles <- ncol(xparticles)
+    ra <- rand[((2+time-1)*nparticles + 1):((2+time)*nparticles)]
+    alphas <- theta[1] + theta[2] * ra
+    xparticles <- pz_transition(xparticles, alphas, time-1, c(theta[3:4], 0.1, 0.1))
+    return(xparticles)
+  }
+  dmeasurement <- function(xparticles, theta, observation, ...) {
+    return(dnorm(x = observation, mean = log(xparticles[1,]), sd = 0.2, log = TRUE))
+  }
+  generate_randomness_pmmh <- function(nparticles, datalength){
+    return(pz_generate_randomness_cpp(nparticles, datalength))
+  }
+  precompute <- function(...){
+    return(list())
+  }
+
   #
   model <- list(rprior = rprior,
                 dprior = dprior,
                 generate_randomness = generate_randomness,
                 robservation = robservation,
                 parameter_names = c("mu_alpha", "sigma_alpha", "c", "e"),
-                thetadim = 4, ydim = 1)
+                thetadim = 4, ydim = 1,
+                rinit = rinit, rtransition = rtransition, dmeasurement = dmeasurement, generate_randomness_pmmh = generate_randomness_pmmh, precompute = precompute)
   return(model)
 }

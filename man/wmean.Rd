@@ -9,4 +9,3 @@ wmean(xparticles, normweights)
 \description{
 wmean
 }
-

@@ -17,4 +17,3 @@ to be passed to rprior,dprior,robservation)
 This function returns a list representing
 a Normal location model, in a dimension specified by the user as an argument.
 }
-

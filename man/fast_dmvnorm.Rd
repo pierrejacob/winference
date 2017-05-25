@@ -9,4 +9,3 @@ fast_dmvnorm(x, mean, covariance)
 \description{
 evaluate multivariate Normal log-densities
 }
-

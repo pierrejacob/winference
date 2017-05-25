@@ -9,4 +9,3 @@ systematic_resampling(normalized_weights)
 \description{
 systematic_resampling
 }
-
