@@ -10,6 +10,11 @@ systematic_resampling <- function(normalized_weights){
 systematic_resampling_given_u <- function(normalized_weights, u){
   return(systematic_resampling_n_(normalized_weights, length(normalized_weights), u))
 }
+
+#'@export
+systematic_resampling_n <- function(normalized_weights, ndraws){
+  return(systematic_resampling_n_(normalized_weights, ndraws, runif(1)))
+}
 # systematic_resampling <- function(normalized_weights){
 #   N <- length(normalized_weights)
 #   indices <- rep(0, N)

@@ -16,4 +16,3 @@ to be passed to rprior,dprior,robservation)
 \description{
 This function returns a list representing a Levy driven stochastic volatility model.
 }
-

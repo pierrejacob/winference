@@ -41,8 +41,18 @@ get_autoregressive <- function(){
     return(observations)
   }
   #
+  loglikelihood <- function(thetaparticles, observations, parameters){
+    init_sd <- exp(thetaparticles[,2]) / sqrt(1 - thetaparticles[,1]^2)
+    ll <- dnorm(observations[1], mean = 0, sd = init_sd, log = TRUE)
+    for (i in 2:length(observations)){
+      ll <- ll + dnorm(observations[i], mean = observations[i-1] * thetaparticles[,1], sd = exp(thetaparticles[,2]), log = TRUE)
+    }
+    return(ll)
+  }
+
+  #
   model <- list(rprior = rprior,
-                dprior = dprior,
+                dprior = dprior, loglikelihood = loglikelihood,
                 generate_randomness = generate_randomness,
                 robservation = robservation,
                 parameter_names = c("rho", "logsigma"),

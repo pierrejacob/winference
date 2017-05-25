@@ -1,15 +1,17 @@
 Package: winference
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Statistical inference with the Wasserstein distance
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Pierre E. Jacob
+Maintainer: Pierre E. Jacob <pierre.jacob@fas.harvard.edu>
+Description: Parameter inference for generative models, by using an approximate Bayesian 
+  computation approach where summary statistics are replaced by the Wasserstein distance
+  between synthetic data and the observations.
 License: What license is it under?
 LazyData: TRUE
 Depends:
-    Rcpp,RcppEigen,doMC,doRNG,foreach,ggplot2,dplyr,reshape2,BH,mclust
+    Rcpp,RcppEigen,doMC,doRNG,foreach,ggplot2,dplyr,reshape2,BH,transport
 Imports:
     Rcpp (>= 0.11.6),RcppEigen,BH
 LinkingTo: Rcpp,RcppEigen,BH
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

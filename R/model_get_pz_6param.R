@@ -1,4 +1,4 @@
-#'@rdname get_pz_4param
+#'@rdname get_pz_6param
 #'@title Phytoplankton-zooplankton model
 #'@description This function returns a list representing
 #' a Lotka-Volterra type model for plankton. See
@@ -9,7 +9,7 @@
 #' ydim (dimension of observations), parameters (list of hyperparameters,
 #' to be passed to rprior,dprior,robservation)
 #'@export
-get_pz_4param <- function(){
+get_pz_6param <- function(){
   rprior <- function(nparticles, ...){
     ## evaluate prior density on the transformed parameter
     theta1 <- runif(nparticles)
@@ -17,7 +17,10 @@ get_pz_4param <- function(){
     # set the other parameters deterministically
     theta3 <- runif(nparticles)
     theta4 <- runif(nparticles)
-    return(cbind(theta1, theta2, theta3, theta4))
+    theta5 <- runif(nparticles)
+    theta6 <- runif(nparticles)
+
+    return(cbind(theta1, theta2, theta3, theta4, theta5, theta6))
   }
   # prior, on the transformed parameters
   dprior <- function(thetas, ...){
@@ -25,6 +28,7 @@ get_pz_4param <- function(){
     if (is.null(dim(thetas))) thetas <- matrix(thetas, nrow = 1)
     density_evals <- dunif(thetas[,1], log = TRUE) + dunif(thetas[,2], log = TRUE)
     density_evals <- density_evals + dunif(thetas[,3], log = TRUE) + dunif(thetas[,4], log = TRUE)
+    density_evals <- density_evals + dunif(thetas[,5], log = TRUE) + dunif(thetas[,6], log = TRUE)
     return(density_evals)
   }
 
@@ -40,7 +44,7 @@ get_pz_4param <- function(){
     log_obs <- rep(0, nobservations)
     for (t in 1:nobservations){
       alpha <- theta[2] * randomness$x[t] + theta[1]
-      state <- pz_transition(state, alpha, t-1, c(theta[3:4], 0.1, 0.1))
+      state <- pz_transition(state, alpha, t-1, c(theta[3:6]))
       states[,t+1] <- state
       log_obs[t] <- 0.2*randomness$y[t] + log(state[1,1])
     }
@@ -54,7 +58,7 @@ get_pz_4param <- function(){
     nparticles <- ncol(xparticles)
     ra <- rand[((2+time-1)*nparticles + 1):((2+time)*nparticles)]
     alphas <- theta[1] + theta[2] * ra
-    xparticles <- pz_transition(xparticles, alphas, time-1, c(theta[3:4], 0.1, 0.1))
+    xparticles <- pz_transition(xparticles, alphas, time-1, c(theta[3:6]))
     return(xparticles)
   }
   dmeasurement <- function(xparticles, theta, observation, ...) {
@@ -72,8 +76,8 @@ get_pz_4param <- function(){
                 dprior = dprior,
                 generate_randomness = generate_randomness,
                 robservation = robservation,
-                parameter_names = c("mu_alpha", "sigma_alpha", "c", "e"),
-                thetadim = 4, ydim = 1,
+                parameter_names = c("mu_alpha", "sigma_alpha", "c", "e", "ml", "mq"),
+                thetadim = 6, ydim = 1,
                 rinit = rinit, rtransition = rtransition, dmeasurement = dmeasurement, generate_randomness_pmmh = generate_randomness_pmmh, precompute = precompute)
   return(model)
 }

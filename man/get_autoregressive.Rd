@@ -17,4 +17,3 @@ to be passed to rprior,dprior,robservation)
 This function returns a list representing an auto-regressive
 model of order 1.
 }
-

@@ -1,0 +1,146 @@
+---
+title: 'Tutorial: distance calculations'
+author: "PJ, EB, MG, CR"
+date: "March 21, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setting
+
+This script compares different distances between datasets, in a multivariate, i.i.d. setting.
+
+The model specifies $Y \sim \mathcal{N}(\mu, \Sigma)$, where $\Sigma$ is a fixed covariance matrix.
+The prior on $\mu$ is $\mathcal{N}(0,1)$ on each component.
+
+We begin by loading the package, registering multiple cores, setting the random number generator, etc.
+
+```{r init, message=FALSE,warning=FALSE}
+# load package
+library(winference)
+# register parallel cores
+registerDoMC(cores = detectCores())
+# remove all
+rm(list = ls())
+# apply preferences for ggplotting
+require(gridExtra)
+theme_set(theme_bw())
+# set RNG seed
+set.seed(11)
+```
+
+## Data and model
+We define a multivariate Gaussian model and generate some data.
+```{r generatedata, tidy=T}
+# number of observations
+dimension <- 5
+target <- get_multivariate_normal(dimension)
+target$parameters$S <- diag(1, dimension, dimension)
+for (i in 1:dimension){
+  for (j in 1:dimension){
+    target$parameters$S[i,j] <- 0.5^(abs(i-j))
+  }
+}
+nobservations <- 100
+target$simulate <- function(theta)
+  target$robservation(nobservations, theta, target$parameters,  target$generate_randomness(nobservations))
+# number of observations
+true_theta <- rnorm(dimension)
+obs <- target$simulate(true_theta)
+# the observations are in a ydim x nobservations matrix
+```
+
+## Distances
+
+We consider three distances between multivariate samples: the exact Wasserstein distance, using to the transport package,
+the Sinkhorn distance, due to Marco Cuturi, and the Hilbert-based distance proposed in our article.
+Let's test these distances on two datasets.
+
+```{r test}
+# generate a fake data set
+fake_obs <- target$simulate(rnorm(dimension))
+w1 <- rep(1/nobservations, nobservations)
+w2 <- rep(1/nobservations, nobservations)
+C <- cost_matrix_L2(obs, fake_obs)
+exact_transport_given_C(w1, w2, C, p = 1)
+sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.1, niterations = 100)
+sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.01, niterations = 100)
+sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.01, niterations = 1000)
+hilbert_distance(obs, fake_obs, p = 1, ground_p = 2)
+```
+
+## Inference using the Hilbert distance
+
+Now let's infer the parameters using the Hilbert distance.
+```{r hilbertestimation, cache = T, message=F, warning=F, tidy=T}
+param_algo <- list(nthetas = 1024, nmoves = 1, proposal = mixture_rmixmod(),
+                   minimum_diversity = 0.5, R = 2, maxtrials = 1e5)
+compute_distance <- function(y_fake){
+  return(hilbert_distance(obs, y_fake, p = 1, ground_p = 2))
+}
+wsmcresults_hilbert <- wsmc(compute_distance, target, param_algo, maxtime = 20)
+```
+
+We can plot the resulting distribution, for instance as follows.
+
+```{r plothilbert, dependson="hilbertestimation", tidy=T}
+plot_bivariate_polygon(wsmcresults_hilbert, i1 = 3, i2 = 4) + geom_vline(xintercept = true_theta[3]) + geom_hline(yintercept = true_theta[4]) +  xlim(-4,4) + ylim(-4,4) + xlab("X3") + ylab("X4")
+```
+
+## Distance comparison
+
+Based on the resulting samples, we can compare the Hilbert distances to the distances that we would have obtained
+with the exact Wasserstein and Sinkhorn distances.
+
+```{r comparedistances, cache = T, dependson="hilbertestimation", warning=F, message=F, tidy=T}
+w1 <- rep(1/nobservations, nobservations)
+w2 <- rep(1/nobservations, nobservations)
+y_samples <- wsmcresults_hilbert$latest_y
+d_comparison <- foreach(i = 1:length(y_samples), .combine = rbind) %dorng% {
+  C <- cost_matrix_L2(obs, y_samples[[i]])
+  hilbert <- hilbert_distance(obs, y_samples[[i]], p = 1, ground_p = 2)
+  exact <- as.numeric(exact_transport_given_C(w1, w2, C, p = 1))
+  sinkhorn1 <- sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.05, niterations = 100)$corrected
+  sinkhorn2 <- sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.025, niterations = 1000)$corrected
+  data.frame(hilbert = hilbert,
+             exact = exact,
+             sinkhorn1 = sinkhorn1,
+             sinkhorn2 = sinkhorn2)
+}
+g <- qplot(x = d_comparison$exact, y = d_comparison$hilbert, geom = "blank")
+g <- g + geom_point(aes(colour = "hilbert")) + geom_abline(slope = 1, intercept = 0)
+g <- g + geom_point(aes(x = d_comparison$exact, y = d_comparison$sinkhorn1, colour = "sinkhorn 1"))
+g <- g + geom_point(aes(x = d_comparison$exact, y = d_comparison$sinkhorn2, colour = "sinkhorn 2"))
+g <- g + xlab("exact Wasserstein") + ylab("approximation") + scale_colour_manual(name = "", values = c("black", "orange", "blue"))
+g 
+```
+
+We see that the ordering of the distances align for all methods.
+However, if we pursue the inference by doing more SMC steps, 
+the parameters concentrate, and then we see more difference between the different distances.
+
+```{r continued, cache = T, dependson="hilbertestimation", warning=F, message=F, tidy=T}
+wsmcresults_hilbert_continued <- wsmc_continue(wsmcresults_hilbert, maxstep = 5)
+y_samples <- wsmcresults_hilbert_continued$latest_y
+d_comparison <- foreach(i = 1:length(y_samples), .combine = rbind) %dorng% {
+  C <- cost_matrix_L2(obs, y_samples[[i]])
+  hilbert <- hilbert_distance(obs, y_samples[[i]], p = 1, ground_p = 2)
+  exact <- as.numeric(exact_transport_given_C(w1, w2, C, p = 1))
+  sinkhorn1 <- sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.05, niterations = 100)$corrected
+  sinkhorn2 <- sinkhorn_given_C(w1, w2, C, p = 1, eps = 0.025, niterations = 1000)$corrected
+  data.frame(hilbert = hilbert,
+             exact = exact,
+             sinkhorn1 = sinkhorn1,
+             sinkhorn2 = sinkhorn2)
+}
+g <- qplot(x = d_comparison$exact, y = d_comparison$hilbert, geom = "blank")
+g <- g + geom_point(aes(colour = "hilbert")) + geom_abline(slope = 1, intercept = 0)
+g <- g + geom_point(aes(x = d_comparison$exact, y = d_comparison$sinkhorn1, colour = "sinkhorn 1"))
+g <- g + geom_point(aes(x = d_comparison$exact, y = d_comparison$sinkhorn2, colour = "sinkhorn 2"))
+g <- g + xlab("exact Wasserstein") + ylab("approximation") + scale_colour_manual(name = "", values = c("black", "orange", "blue"))
+g 
+```
+

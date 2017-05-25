@@ -16,7 +16,6 @@ class pz_ {
 
   double alpha, c, e, ml, mq;
 
-
   public:
     pz_( double alpha, double c, double e, double ml, double mq ) : alpha(alpha), c(c), e(e), ml(ml), mq(mq) { }
 

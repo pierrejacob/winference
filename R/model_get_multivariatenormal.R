@@ -13,21 +13,23 @@
 #'@export
 get_multivariate_normal <- function(dimension){
   target <- list()
-  target$rprior <- function(nparticles, ...){
-    particles <- matrix(nrow = nparticles, ncol = dimension)
-    for (id in 1:dimension){
-      particles[,id] <- rnorm(nparticles, mean = 0, sd = dimension)
-    }
-    return(particles)
+  target$rprior <- function(nparticles, parameters){
+    return(fast_rmvnorm(nparticles, rep(parameters$mu_0, dimension), diag(parameters$tau^2, dimension, dimension)))
+    # particles <- matrix(nrow = nparticles, ncol = dimension)
+    # for (id in 1:dimension){
+    #   particles[,id] <- rnorm(nparticles, mean = parameters$mu_0, sd = parameters$tau)
+    # }
+    # return(particles)
   }
   # evaluate the log-density of the prior, for each particle
   # parameters is a list containing mu_0, nu, alpha, beta
-  target$dprior <- function(thetas, ...){
-    logdensities <- rep(0, nrow(thetas))
-    for (id in 1:dimension){
-      logdensities <- logdensities + dnorm(thetas[,id], mean = 0, sd = dimension, log = TRUE)
-    }
-    return(logdensities)
+  target$dprior <- function(thetas, parameters){
+    # logdensities <- rep(0, nrow(thetas))
+    return(fast_dmvnorm(thetas, rep(parameters$mu_0, dimension), diag(parameters$tau^2, dimension, dimension)))
+    # for (id in 1:dimension){
+      # logdensities <- logdensities + dnorm(thetas[,id],  mean = parameters$mu_0, sd = parameters$tau, log = TRUE)
+    # }
+    # return(logdensities)
   }
 
   # generate random variables used to compute a synthetic dataset
@@ -36,19 +38,25 @@ get_multivariate_normal <- function(dimension){
   }
 
   S <- diag(1, dimension, dimension)
-  for (i in 1:(dimension-1)){
-    S[i,i+1] <- S[i+1,i] <- 0.5
+  if (dimension > 1){
+    for (i in 1:(dimension-1)){
+      S[i,i+1] <- S[i+1,i] <- 0.5
+    }
   }
-
-  target$parameters <- list(S = S)
+  target$parameters <- list(S = S, mu_0 = 0, tau = 10)
   # function to compute a dataset for each theta value
-  target$robservation <- function(nobservations, theta, parameters, randomness){
-    y <- randomness %*% chol(parameters$S)
-    y <- sweep(x = y, MARGIN = 2, STATS = theta, FUN = "+")
-    return(t(y))
+  target$robservation <- function(nobservations, theta, parameters, ...){
+    return(t(fast_rmvnorm(nobservations, theta, parameters$S)))
   }
-
+  target$loglikelihood <- function(thetaparticles, observations, parameters){
+    logdensities <- rep(0, nrow(thetaparticles))
+    for (i in 1:nrow(thetaparticles)){
+      logdensities[i] <- sum(fast_dmvnorm(t(observations), thetaparticles[i,], parameters$S))
+    }
+    return(logdensities)
+  }
   target$thetadim <- dimension
   target$ydim <- dimension
+  target$parameter_names <- paste0("X", 1:dimension)
   return(target)
 }

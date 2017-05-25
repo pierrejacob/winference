@@ -15,4 +15,3 @@ wasserstein <- function(p, qs, cost_matrix, epsilon, niterations){
   return(wasserstein_(p, qs, cost_matrix, epsilon, niterations))
 }
 }
-

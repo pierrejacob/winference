@@ -2,8 +2,8 @@
 % Please edit documentation in R/winference-package.R
 \docType{package}
 \name{winference-package}
-\alias{winference}
 \alias{winference-package}
+\alias{winference}
 \title{winference}
 \description{
 ...
@@ -15,4 +15,3 @@
 anonymous <anonymous@anonymous.com>
 }
 \keyword{package}
-

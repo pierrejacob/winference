@@ -20,4 +20,3 @@ The prior is mu ~ Normal(mu_0, nu^{-1}), where nu is precision
 and  tau ~ Gamma(alpha, beta), where beta is rate (1/scale).
  The likelihood is Y ~ Normal(mu, tau^2) where tau^2 is the variance.
 }
-

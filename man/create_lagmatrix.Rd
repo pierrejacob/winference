@@ -7,7 +7,7 @@
 create_lagmatrix(timeseries, k)
 }
 \value{
-a matrix with k rows and n columns, where n is the length of the provided time series
+a matrix with k rows and n-k columns, where n is the length of the provided time series
 }
 \description{
 This function creates the delay reconstruction, i.e. a matrix
@@ -15,4 +15,3 @@ where the first row contains y_1, ..., y_T (the given univariate time series)
 the second row contains NA, y_2, ..., y_T .... etc
 the k-th row contains NA, NA, ..., y_{k+1}, ..., y_T
 }
-
