@@ -8,7 +8,6 @@ src/*.o
 src/*.so
 src/*.dll
 TODO
-/inst/tutorials/*cache*/
-/inst/tutorials/*files*/
+inst/tutorials/*cache*/
+inst/tutorials/*files*/
 
-inst/tutorials/tutorial_distances_files/figure-latex/comparedistances-1.pdf
