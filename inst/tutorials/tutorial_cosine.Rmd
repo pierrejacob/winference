@@ -1,0 +1,177 @@
+---
+title: 'Tutorial: cosine trend model'
+author: "EB, PJ, MG, CR"
+date: "June 8, 2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setting
+
+This script applies the proposed ABC with Wasserstein distance,
+to approximate the posterior distribution in a cosine trend model.
+
+The model specifies $Y_t \sim \mathcal{N}(\cos(2\pi \omega t + \phi), \sigma^2)$,
+the parameters are $(\omega, \phi, \sigma^2)$, the prior is ... 
+The data are generated from ...
+
+We begin by loading the package, registering multiple cores, setting the random number generator, etc.
+
+```{r init, message=FALSE,warning=FALSE}
+# load package
+library(winference)
+# register parallel cores
+registerDoParallel(cores = detectCores())
+# remove all
+rm(list = ls())
+# apply preferences for ggplotting
+require(gridExtra)
+theme_set(theme_bw())
+# set RNG seed
+set.seed(11)
+```
+
+## Data and model
+We define the model and generate some data
+```{r generatedata, tidy = T}
+nobservations <- 100
+
+rprior <- function(nparticles, ...){
+  omegas <- runif(nparticles, min = 0, max = 1/10)
+  phis <- runif(nparticles, min = 0, max = 2*pi)
+  logsigma <- rnorm(nparticles)
+  return(cbind(omegas, phis, logsigma))
+}
+
+# evaluate the log-density of the prior, for each particle
+dprior <- function(thetas, ...){
+  logdensities <- dnorm(thetas[,3], 0, 1, log = TRUE)
+  logdensities <- logdensities + dunif(thetas[,1], min = 0, max = 1/10, log = TRUE)
+  logdensities <- logdensities + dunif(thetas[,2], min = 0, max = 2*pi, log = TRUE)
+  return(logdensities)
+}
+#
+# function to generate a dataset for each theta value
+simulate <- function(theta){
+  observations <- cos(2*pi*theta[1]*(1:nobservations) + theta[2]) + rnorm(nobservations, mean = 0, sd = exp(theta[3]))
+  return(observations)
+}
+#
+target <- list(rprior = rprior,
+              dprior = dprior,
+              simulate = simulate,
+              parameter_names = c("omega", "phi", "logsigma"),
+              thetadim = 3, ydim = 1,
+              parameters = list())
+
+theta_star <- c(1/80, pi/4, 0)
+obs <- target$simulate(theta_star)
+plot(obs, type = "l", ylab = "y")
+
+```
+
+## Distance calculation and Monte Carlo algorithm
+
+We define a way of calculating a distance between fake data and the observed data. Here we use 
+curve matching: we augment each observation $y_t$ with the time index $t$, and then
+define a ground metric on the space of $(t,y_t)$.
+
+```{r distance, message=F, warning=F, tidy=T}
+lambda <- 1
+multiplier <- lambda*(max(obs) - min(obs))
+augment <- function(series) rbind(series, multiplier * (1:length(series))/length(series))
+augmented_obs <- augment(obs)
+
+# we're using the Hilbert distance
+compute_distance <- function(y_fake){
+  augmented_y_fake <- augment(y_fake)
+  # return(hilbert_distance(augmented_obs, augmented_y_fake, p = 1, ground_p = 2))
+  return(swap_distance(augmented_obs, augmented_y_fake, p = 1, ground_p = 2, tolerance = 1e-5)$distance)
+}
+# test: compute_d(target$simulate(target$rprior(1)))
+```
+We specify algorithmic parameters in a list.
+```{r algometers, message=F, warning=F, tidy=T}
+# algorithmic parameters: number of particles, number of moves per rejuvenation step,
+# proposal distribution, the number of steps to perform in total, the diversity parameter
+# used in the threshold adaptation, the number of hits to use in the r-hit kernel,
+# and the maximum number of trials to use in the r-hit kernel before rejecting.
+param_algo <- list(nthetas = 1024, nmoves = 1, proposal = mixture_rmixmod(),
+                   minimum_diversity = 0.5, R = 2, maxtrials = 1e5)
+```
+We now run the algorithm.
+```{r wsmc1, cache = TRUE}
+# now run the algorithm until 5e5 model simulations have been performed
+wsmcresults <- wsmc(compute_distance, target, param_algo, maxsimulation = 5e5)
+```
+
+Now we can look at the ouput, with various plots.
+```{r plots1, dependson="wsmc1", fig.width=12, fig.height=3, fig.align="center", tidy=T}
+# we have access to all the generated particles, distances, and thresholds
+names(wsmcresults)
+# let's plot some of the output, for instance the thresholds against the cumulative number of model simulations 
+# (which is equal to the number of distances calculated)
+qplot(x = cumsum(wsmcresults$ncomputed), y = wsmcresults$threshold_history, geom = "line") + scale_y_log10() + scale_x_log10() + xlab("# model simulations") + geom_point()
+```
+We can look at the distributions of parameters.
+```{r plots2, dependson="wsmc1", fig.width=12, fig.height=3, fig.align="center", tidy=T}
+# and let's look at the parameters themselves
+grid.arrange(plot_marginal(wsmcresults, i = 1) + geom_vline(xintercept = theta_star[1]),
+             plot_marginal(wsmcresults, i = 2) + geom_vline(xintercept = theta_star[2]),
+             plot_marginal(wsmcresults, i = 3) + geom_vline(xintercept = theta_star[3]), ncol=3)
+```
+
+
+## Posterior samples via MCMC
+
+We use the WABC output to initialize a Metropolis-Hastings algorithm.
+
+```{r mcmc, tidy=T, cache=T}
+# define log-likelihood function
+target$loglikelihood <- function(thetas, ys, ...){
+  evals <- rep(0, nrow(thetas))
+  for (itheta in 1:nrow(thetas)){
+    backbone <- cos(2 * pi * thetas[itheta,1] * (1:nobservations) + thetas[itheta,2])
+    evals[itheta] <- sum(dnorm(ys, mean = backbone, sd = exp(thetas[itheta,3]), log = TRUE))
+  }
+  return(evals)
+}
+thetas <- wsmcresults$thetas_history[[length(wsmcresults$thetas_history)]]
+thetas_cov <- cov(thetas)
+# initial states of the Markov chain
+theta_init <- thetas[sample(x = 1:nrow(thetas), 4),]
+# tuning parameters
+tuning_parameters <- list(niterations = 50000, nchains = nrow(theta_init),
+                          cov_proposal = thetas_cov,
+                          adaptation = 0, init_chains = theta_init)
+# run adaptive MH scheme
+mh <- metropolishastings(obs, target, tuning_parameters)
+burnin <- 0
+chain.df <- mhchainlist_to_dataframe(mh$chains)
+g1 <- ggplot(chain.df %>% filter(iteration > burnin, iteration %% 100 == 1), aes(x = iteration, y = X.1, group = ichain, colour = factor(ichain))) + geom_line() + theme(legend.position = "none")
+g1 <- g1 + geom_hline(yintercept = theta_star[1], col = "red")
+g1
+
+g2 <- ggplot(chain.df %>% filter(iteration > burnin, iteration %% 100 == 1), aes(x = iteration, y = X.2, group = ichain, colour = factor(ichain))) + geom_line() + theme(legend.position = "none")
+g2 <- g2 + geom_hline(yintercept = theta_star[2], col = "red")
+g2
+
+g3 <- ggplot(chain.df %>% filter(iteration > burnin, iteration %% 100 == 1), aes(x = iteration, y = X.3, group = ichain, colour = factor(ichain))) + geom_line() + theme(legend.position = "none")
+g3 <- g3 + geom_hline(yintercept = theta_star[3], col = "red")
+g3
+
+wsmc.df <- wsmc_to_dataframe(wsmcresults)
+ggplot(chain.df, aes(x = X.1)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
+  geom_density(data = wsmc.df %>% filter(step == length(wsmcresults$thetas_history)), aes(x = omega, y = ..density.., fill = "ABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "ABC" = "darkblue")) + xlab(expression(omega))
+
+ggplot(chain.df, aes(x = X.2)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
+  geom_density(data = wsmc.df %>% filter(step == length(wsmcresults$thetas_history)), aes(x = phi, y = ..density.., fill = "ABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "ABC" = "darkblue")) + xlab(expression(phi))
+
+ggplot(chain.df, aes(x = X.3)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
+  geom_density(data = wsmc.df %>% filter(step == length(wsmcresults$thetas_history)), aes(x = logsigma, y = ..density.., fill = "ABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "ABC" = "darkblue")) + xlab(expression(log(sigma)))
+
+```
+

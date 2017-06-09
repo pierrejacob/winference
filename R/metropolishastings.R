@@ -1,6 +1,6 @@
-#'@export
 # Function to perform Metropolis-Hastings
-metropolishastings <- function(observations, target, tuning_parameters){
+#'@export
+metropolishastings <- function(observations, target, tuning_parameters, savefile = NULL, verbose = FALSE){
   # Posterior density function (log)
   posterior <- function(thetas){
     logdens <- target$dprior(thetas, target$parameters)
@@ -32,7 +32,7 @@ metropolishastings <- function(observations, target, tuning_parameters){
   naccepts <- 0
   # run the chains
   for (iteration in 2:niterations){
-    if (iteration %% 10 == 1){
+    if ((iteration %% 10 == 1) && (verbose)){
       cat("iteration ", iteration, "/", niterations, "\n")
       cat("average acceptance:", naccepts / (iteration*nchains) * 100, "%\n")
     }
@@ -61,6 +61,10 @@ metropolishastings <- function(observations, target, tuning_parameters){
     # book keeping
     for (ichain in 1:nchains){
       chains[[ichain]][iteration,] <- current_chains[ichain,]
+    }
+    if (!is.null(savefile) && iteration %% 1000 == 1){
+      mh_results <- list(chains = chains, naccepts = naccepts, cov_proposal = cov_proposal, iteration = iteration)
+      save(mh_results, file = savefile)
     }
   }
   cat("average acceptance:", naccepts / (niterations*nchains) * 100, "%\n")

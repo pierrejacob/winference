@@ -14,7 +14,7 @@
 #'  \item distances_history, threshold_history, param_algo
 #'  }
 #'@export
-wsmc <- function(compute_d, target, param_algo, savefile = NULL, debug = FALSE, maxstep = Inf, maxtime = Inf, maxsimulation = Inf){
+wsmc <- function(compute_d, target, param_algo, savefile = NULL, parallel = TRUE, debug = FALSE, maxstep = Inf, maxtime = Inf, maxsimulation = Inf){
   if (is.infinite(maxstep) && is.infinite(maxtime) && is.infinite(maxsimulation)){
     print("error: you have to provide a finite value for 'maxstep' OR 'maxtime' OR 'maxsimulation'")
     return(NULL)
@@ -28,7 +28,10 @@ wsmc <- function(compute_d, target, param_algo, savefile = NULL, debug = FALSE, 
   thetas <- target$rprior(param_algo$nthetas, target$parameters)
   # compute distances and associated datasets
   dy <- list()
-  if (!debug){
+  if (debug){
+    print("compute first distances")
+  }
+  if (parallel){
     dy <- foreach(itheta = 1:param_algo$nthetas) %dorng% {
       y_fake <- target$simulate(thetas[itheta,])
       distance <- compute_d(y_fake)
@@ -43,6 +46,10 @@ wsmc <- function(compute_d, target, param_algo, savefile = NULL, debug = FALSE, 
   }
   distances <- sapply(X = dy, FUN = function(x) x$d)
   latest_y <- lapply(X = dy, FUN = function(x) x$y)
+  if (debug){
+    print("first distances computed")
+    print(summary(distances))
+  }
   # distances[1:10,1:3]
   if (target$ydim == 1){
     nobs <- length(latest_y[[1]])
@@ -56,6 +63,9 @@ wsmc <- function(compute_d, target, param_algo, savefile = NULL, debug = FALSE, 
   #
   param_algo$threshold <- as.numeric(quantile(distances, probs = param_algo$minimum_diversity))
   threshold_history <- param_algo$threshold
+  if (debug){
+    cat("first threshold: ", param_algo$threshold, "\n")
+  }
   #
   thetas_history <- list()
   thetas_history[[1]] <- thetas
@@ -78,7 +88,7 @@ wsmc <- function(compute_d, target, param_algo, savefile = NULL, debug = FALSE, 
     if (is.finite(maxsimulation)){
       cat("until # distances calculated >=", maxsimulation, "\n")
     }
-    one_step_results <- wsmc_one_step(thetas, distances, latest_y, compute_d, target, param_algo, debug = debug)
+    one_step_results <- wsmc_one_step(thetas, distances, latest_y, compute_d, target, param_algo, debug = debug, parallel = parallel)
     #
     thetas <- one_step_results$thetas
     distances <- one_step_results$distances
@@ -212,7 +222,7 @@ wsmc_continue <- function(results, savefile = NULL, maxstep = Inf, maxtime = Inf
 # target, likewise
 # param_algo, including a new $threshold and original_proposal
 #'@export
-wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_algo, debug = FALSE){
+wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_algo, debug = FALSE, parallel = TRUE){
   # compute weights
   weights <- as.numeric(distances <= param_algo$threshold)
   normcst <- mean(weights)
@@ -232,7 +242,7 @@ wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_
   acceptrates <- rep(0, param_algo$nmoves)
   ncomputed_thisstep <- 0
   for (i in 1:param_algo$nmoves){
-    mh_res <- move_step(thetas, distances, latest_y, compute_d, target, param_algo, debug = debug)
+    mh_res <- move_step(thetas, distances, latest_y, compute_d, target, param_algo, debug = debug, parallel = parallel)
     thetas <- mh_res$thetas
     distances <- mh_res$distances
     latest_y <- mh_res$latest_y
@@ -243,9 +253,12 @@ wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_
     cat("  acceptance rates:", 100 * acceptrates[i], "%, threshold =", param_algo$threshold,
         ", min. dist. =", min(distances), "\n")
   }
-  # ncomputed <- c(ncomputed, ncomputed_thisstep)
   #
   nunique <- length(unique(thetas[,1])) # number of unique thetas
+  if (debug){
+    print("distances before finding new threshold:")
+    print(summary(distances))
+  }
   # TODO: code robust binary search
   if (nunique/param_algo$nthetas > param_algo$minimum_diversity){
     # if diversity is large enough, we decrease the threshold so that the
@@ -265,19 +278,26 @@ wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_
     if (is.infinite(upper_threshold)){
       upper_threshold <- max(distances)
     }
-    opt <- optimize(f = function(e) (g(e) - param_algo$minimum_diversity)^2, interval = c(lower_threshold, upper_threshold))
-    param_algo$threshold <- opt$minimum
+    opt <- try(optimize(f = function(e) (g(e) - param_algo$minimum_diversity)^2, interval = c(lower_threshold, upper_threshold)))
+    if (inherits(opt, "try-error")){
+      print("error trying to find new threshold: keeping previous threshold")
+    } else {
+      param_algo$threshold <- opt$minimum
+    }
+    if (debug){
+      cat("new threshold: ", param_algo$threshold, "\n")
+    }
   }
   return(list(param_algo = param_algo, thetas = thetas, distances = distances, latest_y = latest_y,
               ncomputed_thisstep = ncomputed_thisstep, normcst = normcst, acceptrates = acceptrates))
 }
 
 #'@export
-move_step <- function(thetas, distances, latest_y, compute_d, target, param_algo, debug = FALSE){
+move_step <- function(thetas, distances, latest_y, compute_d, target, param_algo, debug = FALSE, parallel = TRUE){
   res_foreach <- list()
   if (param_algo$R == 0){
     # perform standard MH move
-    if (!debug){
+    if (parallel){
       res_foreach <- foreach(i = 1:nrow(thetas)) %dorng% {
         theta <- thetas[i,]
         res <- std_move_step_onetheta(theta, compute_d, target, param_algo)
@@ -291,7 +311,7 @@ move_step <- function(thetas, distances, latest_y, compute_d, target, param_algo
     }
   } else {
     # perform R-hit move
-    if (!debug){
+    if (parallel){
       res_foreach <- foreach(i = 1:nrow(thetas)) %dorng% {
         theta <- thetas[i,]
         res <- move_step_onetheta(theta, compute_d, target, param_algo)
@@ -306,6 +326,14 @@ move_step <- function(thetas, distances, latest_y, compute_d, target, param_algo
   }
   # thetas_accepted <- sapply(res_foreach, function(x) x$theta)
   ncomputed <- sum(sapply(res_foreach, function(x) x$ncomputed))
+  if (debug){
+    ncurrents <- sapply(res_foreach, function(x) x$ncurrent)
+    nproposals <- sapply(res_foreach, function(x) x$nproposals)
+    print("ncurrents:")
+    print(summary(ncurrents))
+    print("nproposals:")
+    print(summary(nproposals))
+  }
   accepts <- sapply(res_foreach, function(x) x$accepted)
   for (i in 1:nrow(thetas)){
     if (accepts[i]){

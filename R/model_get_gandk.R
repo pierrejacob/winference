@@ -31,12 +31,31 @@ get_gandk <- function(){
     observations <- gandkinversecdf_givennormals(randomness, theta)
     return(observations)
   }
+  loglikelihood <- function(thetas, ys, ...){
+    n <- length(ys)
+    evals <- rep(0, nrow(thetas))
+    for (itheta in 1:nrow(thetas)){
+      ll <- function(ys, h = 1e-5, tolerance = 1e-10){
+        all_ys <- c(ys-h, ys+h)
+        o <- order(all_ys)
+        x <- rep(0, length(all_ys))
+        x[o[1]] <- gandkcdf(y = all_ys[o[1]], theta = thetas[itheta,], tolerance = tolerance)
+        for (i in 2:length(all_ys)){
+          x[o[i]] <- gandkcdf(y = all_ys[o[i]], theta = thetas[itheta,], tolerance = tolerance, lower = x[o[i-1]])
+        }
+        return(sum(log((x[(n+1):(2*n)] - x[1:n])/(2*h))))
+      }
+      evals[itheta] <- ll(ys)
+    }
+    return(evals)
+  }
   parameters <- list()
   #
   model <- list(rprior = rprior,
                 dprior = dprior,
                 generate_randomness = generate_randomness,
                 robservation = robservation,
+                loglikelihood = loglikelihood,
                 parameter_names = c("A", "B", "g", "k"),
                 parameters = parameters,
                 thetadim = 4, ydim = 1)

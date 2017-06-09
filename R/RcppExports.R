@@ -81,10 +81,6 @@ wasserstein_SAG_auto_ <- function(mu, nu, cost, epsilon, tolerance, stepsize, ma
     .Call('winference_wasserstein_SAG_auto_', PACKAGE = 'winference', mu, nu, cost, epsilon, tolerance, stepsize, maxiterations)
 }
 
-wasserstein_ <- function(p_, q_, cost_matrix_, epsilon, niterations) {
-    .Call('winference_wasserstein_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, niterations)
-}
-
 wasserstein_auto_ <- function(p_, q_, cost_matrix_, epsilon, desired_alpha) {
     .Call('winference_wasserstein_auto_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, desired_alpha)
 }
@@ -111,6 +107,10 @@ dw_sgd_v_cpp <- function(samples, c, nu, y, epsilon, p) {
 
 dw_est_cpp <- function(samples_for_est, v, nu, y, epsilon, p) {
     .Call('winference_dw_est_cpp', PACKAGE = 'winference', samples_for_est, v, nu, y, epsilon, p)
+}
+
+wasserstein_ <- function(p_, q_, cost_matrix_, epsilon, niterations) {
+    .Call('winference_wasserstein_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, niterations)
 }
 
 wmean_ <- function(x, unnormalized_w) {
