@@ -4,8 +4,8 @@
 \alias{wsmc}
 \title{Adaptive SMC sampler with r-hit kernels}
 \usage{
-wsmc(compute_d, target, param_algo, savefile = NULL, debug = FALSE,
-  maxstep = Inf, maxtime = Inf, maxsimulation = Inf)
+wsmc(compute_d, target, param_algo, savefile = NULL, parallel = TRUE,
+  debug = FALSE, maxstep = Inf, maxtime = Inf, maxsimulation = Inf)
 }
 \value{
 a list containing

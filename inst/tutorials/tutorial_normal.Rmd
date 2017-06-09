@@ -1,6 +1,6 @@
 ---
 title: 'Tutorial: Normal location model'
-author: "PJ, EB, MG, CR"
+author: "EB, PJ, MG, CR"
 date: "March 21, 2017"
 output: pdf_document
 ---
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Setting
 
-This script applies the proposed ABC-SMC with Wasserstein distance
+This script applies the proposed ABC with Wasserstein distance,
 to approximate the posterior distribution in a Normal location model.
 
 The model specifies $Y \sim \mathcal{N}(\mu, \sigma^2)$,
@@ -25,7 +25,7 @@ We begin by loading the package, registering multiple cores, setting the random 
 # load package
 library(winference)
 # register parallel cores
-registerDoMC(cores = detectCores())
+registerDoParallel(cores = detectCores())
 # remove all
 rm(list = ls())
 # apply preferences for ggplotting
@@ -87,7 +87,7 @@ compute_distance <- function(y_fake){
   return(mean(abs(y_obs_sorted - y_fake)))
 }
 ```
-We now specify algorithmic parameters specified in a list.
+We now specify algorithmic parameters in a list.
 ```{r algometers, message=F, warning=F, tidy=T}
 # algorithmic parameters: number of particles, number of moves per rejuvenation step,
 # proposal distribution, the number of steps to perform in total, the diversity parameter
@@ -116,7 +116,7 @@ grid.arrange(plot_threshold(wsmcresults), plot_ncomputed(wsmcresults), ncol=2)
 We can look at the distributions of parameters.
 ```{r plots2, dependson="wsmc1", fig.width=12, fig.height=3, fig.align="center", tidy=T}
 # and let's look at the parameters themselves
-plot_bivariate(wsmcresults, i1 = 1, i2 = 2)
+plot_bivariate_polygon(wsmcresults, i1 = 1, i2 = 2)
 grid.arrange(plot_marginal(wsmcresults, i = 1), plot_marginal(wsmcresults, i = 2), ncol=2)
 ```
 Finally, we can proceed to more steps of the algorithm, and plot the resulting output.
@@ -124,7 +124,9 @@ Finally, we can proceed to more steps of the algorithm, and plot the resulting o
 # let's do 10 more steps
 wsmcresults_continued <- wsmc_continue(wsmcresults, maxtime = 10)
 #
-plot_bivariate(wsmcresults_continued, i1 = 1, i2 = 2)
+plot_bivariate_polygon(wsmcresults_continued, i1 = 1, i2 = 2)
 grid.arrange(plot_marginal(wsmcresults_continued, i = 1), plot_marginal(wsmcresults_continued, i = 2), ncol=2)
 ```
+The Wasserstein ABC posterior has concentrated around a specific region of the parameter space, around
+the parameter $\theta$ that minimizes the Wasserstein distance between the empirical distribution of the data and the model's distribution.
 

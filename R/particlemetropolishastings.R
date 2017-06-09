@@ -1,6 +1,6 @@
 # Particle marginal Metropolis-Hastings
 #'@export
-pmmh <- function(observations, target, tuning_parameters){
+pmmh <- function(observations, target, tuning_parameters, savefile = NULL){
   niterations <- tuning_parameters$niterations
   nchains <- tuning_parameters$nchains
   cov_proposal <- tuning_parameters$cov_proposal
@@ -73,6 +73,10 @@ pmmh <- function(observations, target, tuning_parameters){
     # book keeping
     for (ichain in 1:nchains){
       chains[[ichain]][iteration,] <- current_chains[ichain,]
+    }
+    if (!is.null(savefile) && iteration %% 1000 == 1){
+      pmmh_results <- list(chains = chains, naccepts = naccepts, cov_proposal = cov_proposal, iteration = iteration)
+      save(pmmh_results, file = savefile)
     }
   }
   cat("average acceptance:", naccepts / (niterations*nchains) * 100, "%\n")
