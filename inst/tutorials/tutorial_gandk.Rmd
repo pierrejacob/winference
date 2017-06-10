@@ -32,7 +32,7 @@ The g-and-k distribution is defined through its quantile function:
 with parameters $(a,b,g,k)$. We define the data-generating parameter
 $(a_\star,b_\star,g_\star,k_\star) = (3,1,2,0.5)$.
 
-```{r definequantile, engine='Rcpp'}
+```{r definequantile, engine='Rcpp', tidy=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
@@ -63,12 +63,12 @@ To compute the likelihood, we need to get the pdf of the g-and-k distribution. T
 derivative of the cdf, which is the inverse of the quantile function. We first get the cdf, by numerical
 inversion of the quantile function. We use a simple binary search scheme.
 
-```{r engine='Rcpp'}
+```{r gandkcdf, engine='Rcpp', tidy=TRUE}
 #include <Rcpp.h>
 using namespace Rcpp;
 // [[Rcpp::export]]
-double gandk_cdf(double y, NumericVector theta, int maxsteps = 1000, double tolerance = 1e-10,
-                 double lower = 1e-20, double upper = 1-1e-20){
+double gandk_cdf(double y, NumericVector theta, int maxsteps = 1000, 
+                 double tolerance = 1e-10, double lower = 1e-20, double upper = 1-1e-20){
   double A = theta(0);
   double B = theta(1);
   double c = 0.8;
@@ -81,20 +81,23 @@ double gandk_cdf(double y, NumericVector theta, int maxsteps = 1000, double tole
   NumericVector dd(1);
   dd(0) = current_try;
   NumericVector z = qnorm(dd);
-  double fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) * pow((1 + pow(z(0), 2.0)), k) * z(0);
+  double fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) *
+    pow((1 + pow(z(0), 2.0)), k) * z(0);
   while (!(fattempt > y-tolerance && fattempt < y+tolerance) && (istep < maxsteps)){
     istep++;
     if (fattempt > y-tolerance){
       current_try = current_try - current_size;
       dd(0) = current_try;
       NumericVector z = qnorm(dd);
-      fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) * pow((1 + pow(z(0), 2.0)), k) * z(0);
+      fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) * 
+        pow((1 + pow(z(0), 2.0)), k) * z(0);
       current_size = current_size / 2;
     } else {
       current_try = current_try + current_size;
       dd(0) = current_try;
       NumericVector z = qnorm(dd);
-      fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) * pow((1 + pow(z(0), 2.0)), k) * z(0);
+      fattempt = A + B * (1 + c * (1 - exp(- g * z(0))) / (1 + exp(- g * z(0)))) *
+        pow((1 + pow(z(0), 2.0)), k) * z(0);
       current_size = current_size / 2;
     }
   }
@@ -103,14 +106,14 @@ double gandk_cdf(double y, NumericVector theta, int maxsteps = 1000, double tole
 ```
 
 We can now plot the cdf.
-```{r plotcdf}
+```{r plotcdf, tidy=TRUE}
 # plot cdf 
 curve(sapply(x, FUN = function(v) gandk_cdf(v, theta_star)), from = -10, to = 20, n = 500, ylab = "quantile")
 ```
 
 Finally we can get the pdf by numerical differentiation, e.g. using the *numDeriv* package.
 
-```{r definepdf}
+```{r definepdf, tidy=TRUE}
 library(numDeriv)
 cdf_ <- function(z) sapply(z, FUN = function(v) gandk_cdf(v, theta_star))
 pdf <- function(x){
@@ -127,7 +130,7 @@ Once we get the pdf, we can simply compute the likelihood by multiplying the pdf
 of the search within the interval $[0,1]$. Such an implementation of the g-and-k likelihood is provided
 below.
 
-```{r likelihood}
+```{r likelihood, tidy=TRUE}
 # this function computes the likelihood of ys, given each theta 
 # each theta being a row in the matrix 'thetas'
 loglikelihood <- function(thetas, ys, ...){
@@ -151,7 +154,7 @@ loglikelihood <- function(thetas, ys, ...){
 ```
 
 Define the model, and generate some data.
-```{r definemodel, include=FALSE}
+```{r definemodel, include=FALSE, tidy=TRUE}
 # number of observations
 nobservations <- 1000
 # prior is uniform [0,10] on each parameter
@@ -188,7 +191,7 @@ obs <- target$simulate(theta_star)
 We can now plot the likelihood of the observations, e.g. as follows,
 as a function of $a$, the other parameters being fixed.
 
-```{r loglikelihoodplots}
+```{r loglikelihoodplots, tidy=TRUE}
 nthetas <- 100
 thetas <- matrix(nrow = nthetas, ncol = 4)
 as <- seq(from = 1, to = 5, length.out = nthetas)
@@ -243,17 +246,33 @@ results <- wsmc(compute_d, target, param_algo, maxtime = 3*60)
 # let's look at the marginal distributions
 wsmc.df <- wsmc_to_dataframe(results)
 nsteps <- length(results$thetas_history)
-g1 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.1)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
-  geom_density(data = wsmc.df %>% filter(step == nsteps), aes(x = a, y = ..density.., fill = "WABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue")) + xlab(expression(a)) + geom_vline(xintercept = theta_star[1])
+g1 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.1))
+g1 <- g1 + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5)
+g1 <- g1 +  geom_density(data = wsmc.df %>% filter(step == nsteps), 
+                         aes(x = a, y = ..density.., fill = "WABC"), alpha = 0.5)
+g1 <- g1 + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue"))
+g1 <- g1 + xlab(expression(a)) + geom_vline(xintercept = theta_star[1])
 
-g2 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.2)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
-  geom_density(data = wsmc.df %>% filter(step == nsteps), aes(x = b, y = ..density.., fill = "WABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue")) + xlab(expression(b))  + geom_vline(xintercept = theta_star[2])
+g2 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.2))
+g2 <- g2 + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5)
+g2 <- g2 +  geom_density(data = wsmc.df %>% filter(step == nsteps), 
+                         aes(x = b, y = ..density.., fill = "WABC"), alpha = 0.5)
+g2 <- g2 + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue"))
+g2 <- g2 + xlab(expression(b)) + geom_vline(xintercept = theta_star[2])
 
-g3 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.3)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
-  geom_density(data = wsmc.df %>% filter(step == nsteps), aes(x = g, y = ..density.., fill = "WABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue")) + xlab(expression(g))  + geom_vline(xintercept = theta_star[3])
+g3 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.3))
+g3 <- g3 + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5)
+g3 <- g3 +  geom_density(data = wsmc.df %>% filter(step == nsteps), 
+                         aes(x = g, y = ..density.., fill = "WABC"), alpha = 0.5)
+g3 <- g3 + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue"))
+g3 <- g3 + xlab(expression(g)) + geom_vline(xintercept = theta_star[3])
 
-g4 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.4)) + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5) +
-  geom_density(data = wsmc.df %>% filter(step == nsteps), aes(x = k, y = ..density.., fill = "WABC"), alpha = 0.5) + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue")) + xlab(expression(k)) + geom_vline(xintercept = theta_star[4])
+g4 <- ggplot(chain.df %>% filter(iteration > burnin), aes(x = X.4))
+g4 <- g4 + geom_density(aes(y = ..density.., fill = "Posterior"), alpha = 0.5)
+g4 <- g4 +  geom_density(data = wsmc.df %>% filter(step == nsteps), 
+                         aes(x = k, y = ..density.., fill = "WABC"), alpha = 0.5)
+g4 <- g4 + scale_fill_manual(name = "", values = c("Posterior" = "black", "WABC" = "darkblue"))
+g4 <- g4 + xlab(expression(k)) + geom_vline(xintercept = theta_star[4])
 
 grid.arrange(g1, g2, g3, g4, ncol = 2)
 
