@@ -32,11 +32,11 @@ metropolishastings <- function(observations, target, tuning_parameters, savefile
   naccepts <- 0
   # run the chains
   for (iteration in 2:niterations){
-    if ((iteration %% 10 == 1) && (verbose)){
+    if ((iteration %% max(1, floor(niterations/100)) == 1) && (verbose)){
       cat("iteration ", iteration, "/", niterations, "\n")
       cat("average acceptance:", naccepts / (iteration*nchains) * 100, "%\n")
     }
-    if (iteration > 50 && tuning_parameters$adaptation > 0  && (iteration %% tuning_parameters$adaptation) == 0){
+    if (iteration > 250 && tuning_parameters$adaptation > 0  && (iteration %% tuning_parameters$adaptation) == 0){
       # adapt the proposal covariance matrix based on the last < 50,000 samples of all chains
       mcmc_samples <- foreach(ichain = 1:nchains, .combine = rbind) %do% {
         matrix(chains[[ichain]][max(1, iteration - tuning_parameters$adaptation):(iteration-1),], ncol = p)

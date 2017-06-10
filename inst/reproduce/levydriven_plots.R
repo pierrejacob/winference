@@ -45,14 +45,15 @@ g <- ggplot(wsmc.df, aes(x = xi, y = omega2, colour = step, group = step)) + geo
 g <- g + theme(legend.position = "none") + xlab(expression(xi)) + ylab(expression(omega^2))
 g <- g + scale_colour_gradient2(midpoint = floor(nsteps1/2))
 g <- g + geom_vline(xintercept = true_theta[3]) + geom_hline(yintercept = true_theta[4])
-# g
+g <- g + scale_y_log10() + scale_x_log10()
 ggsave(filename = paste0(prefix, "levydriven_xiomega2.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 g <- ggplot(wsmc.df, aes(x = lambda, colour = step, group = step)) + geom_density(aes(y = ..density..))
 g <- g + theme(legend.position = "none") + xlab(expression(lambda))
 g <- g + scale_color_gradient(low = rgb(1,0.5,0.5), high = "darkblue")
 g <- g + geom_vline(xintercept = true_theta[5])
-# g
+g <- g + scale_x_log10(breaks = c(0.001,0.01, 0.1, 1), limits = c(1e-4,10))
+g
 ggsave(filename = paste0(prefix, "levydriven_lambda.pdf"), plot = g, width = 7, height = 5)
 #
 
@@ -139,6 +140,6 @@ ggsave(filename = paste0(prefix, "levydriven_omega2_summar.pdf"), plot = g, widt
 g <- ggplot(wsmc2.df  %>% filter(step > nsteps1), aes(x = lambda, colour = step, group = step)) + geom_density(aes(y = ..density..))
 g <- g + theme(legend.position = "none") + xlab(expression(lambda))
 g <- g + scale_color_gradient(low = rgb(1,0.5,0.5), high = "darkblue") + geom_vline(xintercept = true_theta[5])
-g <- g + scale_x_log10(breaks = c(0.001,0.01, 0.1, 1))
+g <- g + scale_x_log10(breaks = c(0.001,0.01, 0.1, 1), limits = c(1e-4,10))
 g
 ggsave(filename = paste0(prefix, "levydriven_lambda_summar.pdf"), plot = g, width = 7, height = 5)

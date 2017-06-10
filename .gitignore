@@ -1,4 +1,5 @@
 *.txt
+*.tex
 .*.swp
 .Rproj.user
 .Rhistory

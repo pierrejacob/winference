@@ -10,7 +10,7 @@ fig.height <- 5
 fig.width <- 5
 
 prefix <- ""
-load(file = "toggleswitchdata.RData")
+load(file = paste0(prefix, "toggleswitchdata.RData"))
 obs <- obs[1:nobservations]
 obs_sorted <- sort(obs)
 
