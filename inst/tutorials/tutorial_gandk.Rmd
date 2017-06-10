@@ -257,9 +257,7 @@ plot_marginal <- function(index){
   g <- g + xlab(target$parameter_names[index]) + geom_vline(xintercept = theta_star[index])
   return(g)
 }
-
 grid.arrange(plot_marginal(1), plot_marginal(2), plot_marginal(3), plot_marginal(4), ncol = 2)
-
 ```
 
 
