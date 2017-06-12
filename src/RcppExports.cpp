@@ -265,6 +265,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// wasserstein_
+List wasserstein_(NumericVector p_, NumericVector q_, NumericMatrix cost_matrix_, double epsilon, int niterations);
+RcppExport SEXP winference_wasserstein_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP niterationsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type p_(p_SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type q_(q_SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type cost_matrix_(cost_matrix_SEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< int >::type niterations(niterationsSEXP);
+    rcpp_result_gen = Rcpp::wrap(wasserstein_(p_, q_, cost_matrix_, epsilon, niterations));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wasserstein_auto_
 List wasserstein_auto_(NumericVector p_, NumericVector q_, NumericMatrix cost_matrix_, double epsilon, double desired_alpha);
 RcppExport SEXP winference_wasserstein_auto_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP desired_alphaSEXP) {
@@ -370,21 +385,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     rcpp_result_gen = Rcpp::wrap(dw_est_cpp(samples_for_est, v, nu, y, epsilon, p));
-    return rcpp_result_gen;
-END_RCPP
-}
-// wasserstein_
-List wasserstein_(NumericVector p_, NumericVector q_, NumericMatrix cost_matrix_, double epsilon, int niterations);
-RcppExport SEXP winference_wasserstein_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP niterationsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type p_(p_SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type q_(q_SEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type cost_matrix_(cost_matrix_SEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< int >::type niterations(niterationsSEXP);
-    rcpp_result_gen = Rcpp::wrap(wasserstein_(p_, q_, cost_matrix_, epsilon, niterations));
     return rcpp_result_gen;
 END_RCPP
 }

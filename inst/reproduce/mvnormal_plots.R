@@ -31,14 +31,14 @@ mu_posterior <- sigma_posterior %*% (solve(sigma_prior) %*% matrix(mu_prior, nco
 posterior_sample <- fast_rmvnorm(1024, mu_posterior, sigma_posterior)
 
 # compute distance from posterior sample to posterior sample
-# filename <- paste0(prefix, "mvnormal.d", d, ".n", nobservations, ".selfdistance.RData")
-# self.distances <- as.numeric(foreach(i = 1:100) %dorng% {
-#   x <- exact_transport_distance(t(fast_rmvnorm(1024, mu_posterior, sigma_posterior)), t(fast_rmvnorm(1024, mu_posterior, sigma_posterior)), p = 1, ground_p = 2)
-#   x
-# })
-# save(self.distances, file = filename)
-# load(filename)
-# self.distances %>% summary
+filename <- paste0(prefix, "mvnormal.d", d, ".n", nobservations, ".selfdistance.RData")
+self.distances <- as.numeric(foreach(i = 1:100) %dorng% {
+  x <- exact_transport_distance(t(fast_rmvnorm(1024, mu_posterior, sigma_posterior)), t(fast_rmvnorm(1024, mu_posterior, sigma_posterior)), p = 1, ground_p = 2)
+  x
+})
+save(self.distances, file = filename)
+load(filename)
+self.distances %>% summary
 # self.distances.qt <- quantile(self.distances, prob = c(0.05, 0.95))
 
 filename <- paste0(prefix, "mvnormalwsmc.d", d, ".n", nobservations, ".wasserstein.RData")
@@ -116,12 +116,11 @@ wasserstein_to_posterior <- function(results, posterior_sample, nmax){
 }
 
 filename <- paste0(prefix, "mvnormalwsmc.d", d, ".n", nobservations, ".w2posterior.RData")
-
 n_w_comp <- 50
-# w_to_post_wasserstein <- wasserstein_to_posterior(results_wasserstein, posterior_sample, n_w_comp)
-# w_to_post_euclidean <- wasserstein_to_posterior(results_euclidean, posterior_sample, n_w_comp)
-# w_to_post_summary <- wasserstein_to_posterior(results_summary, posterior_sample, n_w_comp)
-# save(w_to_post_wasserstein, w_to_post_euclidean, w_to_post_summary, file = filename)
+w_to_post_wasserstein <- wasserstein_to_posterior(results_wasserstein, posterior_sample, n_w_comp)
+w_to_post_euclidean <- wasserstein_to_posterior(results_euclidean, posterior_sample, n_w_comp)
+w_to_post_summary <- wasserstein_to_posterior(results_summary, posterior_sample, n_w_comp)
+save(w_to_post_wasserstein, w_to_post_euclidean, w_to_post_summary, file = filename)
 
 load(file = filename)
 
