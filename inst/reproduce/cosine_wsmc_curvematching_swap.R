@@ -19,17 +19,25 @@ target$simulate <- function(theta){
 param_algo <- list(nthetas = 2048, nmoves = 1, proposal = mixture_rmixmod(),
                    minimum_diversity = 0.5, R = 2, maxtrials = 1e5)
 
-compute_d <- function(z){
-  return(sqrt(sum((z[1,] - obs[1,])^2)))
-}
+lambda <- 2
+multiplier <- lambda*(max(obs[1,]) - min(obs[1,]))
+augment <- function(series) rbind(multiplier * (1:length(series))/length(series), series)
+augmented_obs <- augment(obs)
+plot(augmented_obs[1,],augmented_obs[2,])
+sorted_augmented_obs <- augmented_obs[,hilbert_order(augmented_obs)]
 
 
-filename <- paste0(prefix, "cosine_wsmc_euclidean.n", nobservations, ".RData")
+compute_d <- function(y_sim){
+  augmented_y_sim <- augment(y_sim)
+  swap_distance(augmented_obs, augmented_y_sim, tolerance = 1e-5)$distance
+} 
+
+# library(microbenchmark)
+# microbenchmark(y_sim <- target$simulate(true_theta),compute_d(y_sim))
+# y_sim <- target$simulate(true_theta)
+# compute_d(y_sim)
+
+filename <- paste0(prefix, "cosine_wsmc_curvematching.swap.lambda", lambda, ".n", nobservations, ".RData")
 results <- wsmc(compute_d, target, param_algo, savefile = filename, maxsimulation = 1e7)
 load(filename)
 # results <- wsmc_continue(results, savefile = filename, maxsimulation = 1e6)
-
-# plot_marginal(results, 1)
-# plot_marginal(results, 2)
-# plot_marginal(results, 3)
-# plot_marginal(results, 4)

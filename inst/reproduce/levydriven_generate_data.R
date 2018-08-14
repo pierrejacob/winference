@@ -23,3 +23,11 @@ plot(obs, type = "l")
 # mean(obs)
 # sd(obs)
 # approx equal to exp(0.9)/sqrt(1-0.7^2)
+
+library(microbenchmark)
+microbenchmark(
+obs <- target$robservation(1e4, true_theta,
+                           target$parameters, target$generate_randomness(1e4)),
+times = 100)
+
+

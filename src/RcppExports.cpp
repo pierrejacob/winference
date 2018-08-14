@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // cost_matrix_L1_
 NumericMatrix cost_matrix_L1_(const NumericMatrix& x, const NumericMatrix& y);
-RcppExport SEXP winference_cost_matrix_L1_(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _winference_cost_matrix_L1_(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -20,7 +20,7 @@ END_RCPP
 }
 // cost_matrix_L2_
 NumericMatrix cost_matrix_L2_(const NumericMatrix& x, const NumericMatrix& y);
-RcppExport SEXP winference_cost_matrix_L2_(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _winference_cost_matrix_L2_(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -32,7 +32,7 @@ END_RCPP
 }
 // cost_matrix_Lp_
 NumericMatrix cost_matrix_Lp_(const NumericMatrix& x, const NumericMatrix& y, double p);
-RcppExport SEXP winference_cost_matrix_Lp_(SEXP xSEXP, SEXP ySEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_cost_matrix_Lp_(SEXP xSEXP, SEXP ySEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -45,7 +45,7 @@ END_RCPP
 }
 // gandkinversecdf_
 NumericVector gandkinversecdf_(NumericVector x, NumericVector theta);
-RcppExport SEXP winference_gandkinversecdf_(SEXP xSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _winference_gandkinversecdf_(SEXP xSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -57,7 +57,7 @@ END_RCPP
 }
 // gandkinversecdf_givennormals_
 NumericVector gandkinversecdf_givennormals_(NumericVector normals, NumericVector theta);
-RcppExport SEXP winference_gandkinversecdf_givennormals_(SEXP normalsSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _winference_gandkinversecdf_givennormals_(SEXP normalsSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -69,7 +69,7 @@ END_RCPP
 }
 // gandkcdf_
 double gandkcdf_(double y, NumericVector theta, int maxsteps, double tolerance, double lower, double upper);
-RcppExport SEXP winference_gandkcdf_(SEXP ySEXP, SEXP thetaSEXP, SEXP maxstepsSEXP, SEXP toleranceSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
+RcppExport SEXP _winference_gandkcdf_(SEXP ySEXP, SEXP thetaSEXP, SEXP maxstepsSEXP, SEXP toleranceSEXP, SEXP lowerSEXP, SEXP upperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -85,7 +85,7 @@ END_RCPP
 }
 // hilbert_order_
 NumericVector hilbert_order_(NumericMatrix x);
-RcppExport SEXP winference_hilbert_order_(SEXP xSEXP) {
+RcppExport SEXP _winference_hilbert_order_(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -96,7 +96,7 @@ END_RCPP
 }
 // levydriven_rtransition_rand_cpp
 List levydriven_rtransition_rand_cpp(int nparticles, NumericVector& theta);
-RcppExport SEXP winference_levydriven_rtransition_rand_cpp(SEXP nparticlesSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _winference_levydriven_rtransition_rand_cpp(SEXP nparticlesSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -108,7 +108,7 @@ END_RCPP
 }
 // median_rcpp
 double median_rcpp(NumericVector x);
-RcppExport SEXP winference_median_rcpp(SEXP xSEXP) {
+RcppExport SEXP _winference_median_rcpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -119,7 +119,7 @@ END_RCPP
 }
 // mmd_c
 double mmd_c(double first_term, double eps, const NumericMatrix& x, const NumericMatrix& y);
-RcppExport SEXP winference_mmd_c(SEXP first_termSEXP, SEXP epsSEXP, SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _winference_mmd_c(SEXP first_termSEXP, SEXP epsSEXP, SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -133,7 +133,7 @@ END_RCPP
 }
 // rmvnorm
 NumericMatrix rmvnorm(int nsamples, const NumericVector& mean, const NumericMatrix& covariance);
-RcppExport SEXP winference_rmvnorm(SEXP nsamplesSEXP, SEXP meanSEXP, SEXP covarianceSEXP) {
+RcppExport SEXP _winference_rmvnorm(SEXP nsamplesSEXP, SEXP meanSEXP, SEXP covarianceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -146,7 +146,7 @@ END_RCPP
 }
 // dmvnorm
 NumericVector dmvnorm(const NumericMatrix& x, const NumericVector& mean, const NumericMatrix& covariance);
-RcppExport SEXP winference_dmvnorm(SEXP xSEXP, SEXP meanSEXP, SEXP covarianceSEXP) {
+RcppExport SEXP _winference_dmvnorm(SEXP xSEXP, SEXP meanSEXP, SEXP covarianceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -159,7 +159,7 @@ END_RCPP
 }
 // one_step_pz_vector
 NumericMatrix one_step_pz_vector(NumericMatrix xparticles, NumericVector alphas, double t, NumericVector parameters);
-RcppExport SEXP winference_one_step_pz_vector(SEXP xparticlesSEXP, SEXP alphasSEXP, SEXP tSEXP, SEXP parametersSEXP) {
+RcppExport SEXP _winference_one_step_pz_vector(SEXP xparticlesSEXP, SEXP alphasSEXP, SEXP tSEXP, SEXP parametersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -173,7 +173,7 @@ END_RCPP
 }
 // pz_generate_randomness_cpp
 NumericVector pz_generate_randomness_cpp(int nparticles, int datalength);
-RcppExport SEXP winference_pz_generate_randomness_cpp(SEXP nparticlesSEXP, SEXP datalengthSEXP) {
+RcppExport SEXP _winference_pz_generate_randomness_cpp(SEXP nparticlesSEXP, SEXP datalengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -185,7 +185,7 @@ END_RCPP
 }
 // pz_perturb_randomness_cpp
 NumericVector pz_perturb_randomness_cpp(const NumericVector& randomness, double rho);
-RcppExport SEXP winference_pz_perturb_randomness_cpp(SEXP randomnessSEXP, SEXP rhoSEXP) {
+RcppExport SEXP _winference_pz_perturb_randomness_cpp(SEXP randomnessSEXP, SEXP rhoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -197,7 +197,7 @@ END_RCPP
 }
 // systematic_resampling_
 IntegerVector systematic_resampling_(const NumericVector& weights);
-RcppExport SEXP winference_systematic_resampling_(SEXP weightsSEXP) {
+RcppExport SEXP _winference_systematic_resampling_(SEXP weightsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -208,7 +208,7 @@ END_RCPP
 }
 // swapsweep
 List swapsweep(IntegerVector permutation, const NumericMatrix Cp, double totalcost);
-RcppExport SEXP winference_swapsweep(SEXP permutationSEXP, SEXP CpSEXP, SEXP totalcostSEXP) {
+RcppExport SEXP _winference_swapsweep(SEXP permutationSEXP, SEXP CpSEXP, SEXP totalcostSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -221,7 +221,7 @@ END_RCPP
 }
 // systematic_resampling_n_
 IntegerVector systematic_resampling_n_(const NumericVector& weights, int ndraws, double u);
-RcppExport SEXP winference_systematic_resampling_n_(SEXP weightsSEXP, SEXP ndrawsSEXP, SEXP uSEXP) {
+RcppExport SEXP _winference_systematic_resampling_n_(SEXP weightsSEXP, SEXP ndrawsSEXP, SEXP uSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -232,9 +232,37 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cont_hist
+NumericVector cont_hist(NumericVector x, double h, NumericVector prob, NumericVector mids);
+RcppExport SEXP _winference_cont_hist(SEXP xSEXP, SEXP hSEXP, SEXP probSEXP, SEXP midsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type prob(probSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mids(midsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cont_hist(x, h, prob, mids));
+    return rcpp_result_gen;
+END_RCPP
+}
+// summary_full
+NumericVector summary_full(NumericVector y, double h, NumericMatrix prob_mat, NumericVector mids);
+RcppExport SEXP _winference_summary_full(SEXP ySEXP, SEXP hSEXP, SEXP prob_matSEXP, SEXP midsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type prob_mat(prob_matSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type mids(midsSEXP);
+    rcpp_result_gen = Rcpp::wrap(summary_full(y, h, prob_mat, mids));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wasserstein_SAG_
 List wasserstein_SAG_(NumericVector mu, NumericVector nu, NumericMatrix cost, double epsilon, int niterations, double stepsize);
-RcppExport SEXP winference_wasserstein_SAG_(SEXP muSEXP, SEXP nuSEXP, SEXP costSEXP, SEXP epsilonSEXP, SEXP niterationsSEXP, SEXP stepsizeSEXP) {
+RcppExport SEXP _winference_wasserstein_SAG_(SEXP muSEXP, SEXP nuSEXP, SEXP costSEXP, SEXP epsilonSEXP, SEXP niterationsSEXP, SEXP stepsizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -250,7 +278,7 @@ END_RCPP
 }
 // wasserstein_SAG_auto_
 List wasserstein_SAG_auto_(NumericVector mu, NumericVector nu, NumericMatrix cost, double epsilon, double tolerance, double stepsize, int maxiterations);
-RcppExport SEXP winference_wasserstein_SAG_auto_(SEXP muSEXP, SEXP nuSEXP, SEXP costSEXP, SEXP epsilonSEXP, SEXP toleranceSEXP, SEXP stepsizeSEXP, SEXP maxiterationsSEXP) {
+RcppExport SEXP _winference_wasserstein_SAG_auto_(SEXP muSEXP, SEXP nuSEXP, SEXP costSEXP, SEXP epsilonSEXP, SEXP toleranceSEXP, SEXP stepsizeSEXP, SEXP maxiterationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -267,7 +295,7 @@ END_RCPP
 }
 // wasserstein_
 List wasserstein_(NumericVector p_, NumericVector q_, NumericMatrix cost_matrix_, double epsilon, int niterations);
-RcppExport SEXP winference_wasserstein_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP niterationsSEXP) {
+RcppExport SEXP _winference_wasserstein_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP niterationsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -282,7 +310,7 @@ END_RCPP
 }
 // wasserstein_auto_
 List wasserstein_auto_(NumericVector p_, NumericVector q_, NumericMatrix cost_matrix_, double epsilon, double desired_alpha);
-RcppExport SEXP winference_wasserstein_auto_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP desired_alphaSEXP) {
+RcppExport SEXP _winference_wasserstein_auto_(SEXP p_SEXP, SEXP q_SEXP, SEXP cost_matrix_SEXP, SEXP epsilonSEXP, SEXP desired_alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -297,7 +325,7 @@ END_RCPP
 }
 // eucl_distn_cpp
 double eucl_distn_cpp(NumericVector x, NumericVector y);
-RcppExport SEXP winference_eucl_distn_cpp(SEXP xSEXP, SEXP ySEXP) {
+RcppExport SEXP _winference_eucl_distn_cpp(SEXP xSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -309,7 +337,7 @@ END_RCPP
 }
 // h_cpp
 double h_cpp(NumericVector x, NumericVector v, NumericVector nu, NumericMatrix y, double epsilon, double p);
-RcppExport SEXP winference_h_cpp(SEXP xSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_h_cpp(SEXP xSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -325,7 +353,7 @@ END_RCPP
 }
 // grad_h_cpp
 NumericVector grad_h_cpp(NumericVector x, NumericVector v, NumericVector nu, NumericMatrix y, double epsilon, double p);
-RcppExport SEXP winference_grad_h_cpp(SEXP xSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_grad_h_cpp(SEXP xSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -341,7 +369,7 @@ END_RCPP
 }
 // dw_sgd_v_thresh_cpp
 NumericVector dw_sgd_v_thresh_cpp(NumericMatrix samples, double c, NumericVector nu, NumericMatrix y, double epsilon, double thresh, double p);
-RcppExport SEXP winference_dw_sgd_v_thresh_cpp(SEXP samplesSEXP, SEXP cSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP threshSEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_dw_sgd_v_thresh_cpp(SEXP samplesSEXP, SEXP cSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP threshSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -358,7 +386,7 @@ END_RCPP
 }
 // dw_sgd_v_cpp
 NumericVector dw_sgd_v_cpp(NumericMatrix samples, double c, NumericVector nu, NumericMatrix y, double epsilon, double p);
-RcppExport SEXP winference_dw_sgd_v_cpp(SEXP samplesSEXP, SEXP cSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_dw_sgd_v_cpp(SEXP samplesSEXP, SEXP cSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -374,7 +402,7 @@ END_RCPP
 }
 // dw_est_cpp
 double dw_est_cpp(NumericMatrix samples_for_est, NumericVector v, NumericVector nu, NumericMatrix y, double epsilon, double p);
-RcppExport SEXP winference_dw_est_cpp(SEXP samples_for_estSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
+RcppExport SEXP _winference_dw_est_cpp(SEXP samples_for_estSEXP, SEXP vSEXP, SEXP nuSEXP, SEXP ySEXP, SEXP epsilonSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -390,7 +418,7 @@ END_RCPP
 }
 // wmean_
 NumericVector wmean_(const NumericMatrix& x, const NumericVector& unnormalized_w);
-RcppExport SEXP winference_wmean_(SEXP xSEXP, SEXP unnormalized_wSEXP) {
+RcppExport SEXP _winference_wmean_(SEXP xSEXP, SEXP unnormalized_wSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -402,7 +430,7 @@ END_RCPP
 }
 // wcovariance_
 NumericMatrix wcovariance_(const NumericMatrix& x, const NumericVector& unnormalized_w, const NumericVector& xbar);
-RcppExport SEXP winference_wcovariance_(SEXP xSEXP, SEXP unnormalized_wSEXP, SEXP xbarSEXP) {
+RcppExport SEXP _winference_wcovariance_(SEXP xSEXP, SEXP unnormalized_wSEXP, SEXP xbarSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -412,4 +440,50 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(wcovariance_(x, unnormalized_w, xbar));
     return rcpp_result_gen;
 END_RCPP
+}
+
+RcppExport SEXP _rcpp_module_boot_module_mvnorm();
+RcppExport SEXP _rcpp_module_boot_module_waverage();
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_winference_cost_matrix_L1_", (DL_FUNC) &_winference_cost_matrix_L1_, 2},
+    {"_winference_cost_matrix_L2_", (DL_FUNC) &_winference_cost_matrix_L2_, 2},
+    {"_winference_cost_matrix_Lp_", (DL_FUNC) &_winference_cost_matrix_Lp_, 3},
+    {"_winference_gandkinversecdf_", (DL_FUNC) &_winference_gandkinversecdf_, 2},
+    {"_winference_gandkinversecdf_givennormals_", (DL_FUNC) &_winference_gandkinversecdf_givennormals_, 2},
+    {"_winference_gandkcdf_", (DL_FUNC) &_winference_gandkcdf_, 6},
+    {"_winference_hilbert_order_", (DL_FUNC) &_winference_hilbert_order_, 1},
+    {"_winference_levydriven_rtransition_rand_cpp", (DL_FUNC) &_winference_levydriven_rtransition_rand_cpp, 2},
+    {"_winference_median_rcpp", (DL_FUNC) &_winference_median_rcpp, 1},
+    {"_winference_mmd_c", (DL_FUNC) &_winference_mmd_c, 4},
+    {"_winference_rmvnorm", (DL_FUNC) &_winference_rmvnorm, 3},
+    {"_winference_dmvnorm", (DL_FUNC) &_winference_dmvnorm, 3},
+    {"_winference_one_step_pz_vector", (DL_FUNC) &_winference_one_step_pz_vector, 4},
+    {"_winference_pz_generate_randomness_cpp", (DL_FUNC) &_winference_pz_generate_randomness_cpp, 2},
+    {"_winference_pz_perturb_randomness_cpp", (DL_FUNC) &_winference_pz_perturb_randomness_cpp, 2},
+    {"_winference_systematic_resampling_", (DL_FUNC) &_winference_systematic_resampling_, 1},
+    {"_winference_swapsweep", (DL_FUNC) &_winference_swapsweep, 3},
+    {"_winference_systematic_resampling_n_", (DL_FUNC) &_winference_systematic_resampling_n_, 3},
+    {"_winference_cont_hist", (DL_FUNC) &_winference_cont_hist, 4},
+    {"_winference_summary_full", (DL_FUNC) &_winference_summary_full, 4},
+    {"_winference_wasserstein_SAG_", (DL_FUNC) &_winference_wasserstein_SAG_, 6},
+    {"_winference_wasserstein_SAG_auto_", (DL_FUNC) &_winference_wasserstein_SAG_auto_, 7},
+    {"_winference_wasserstein_", (DL_FUNC) &_winference_wasserstein_, 5},
+    {"_winference_wasserstein_auto_", (DL_FUNC) &_winference_wasserstein_auto_, 5},
+    {"_winference_eucl_distn_cpp", (DL_FUNC) &_winference_eucl_distn_cpp, 2},
+    {"_winference_h_cpp", (DL_FUNC) &_winference_h_cpp, 6},
+    {"_winference_grad_h_cpp", (DL_FUNC) &_winference_grad_h_cpp, 6},
+    {"_winference_dw_sgd_v_thresh_cpp", (DL_FUNC) &_winference_dw_sgd_v_thresh_cpp, 7},
+    {"_winference_dw_sgd_v_cpp", (DL_FUNC) &_winference_dw_sgd_v_cpp, 6},
+    {"_winference_dw_est_cpp", (DL_FUNC) &_winference_dw_est_cpp, 6},
+    {"_winference_wmean_", (DL_FUNC) &_winference_wmean_, 2},
+    {"_winference_wcovariance_", (DL_FUNC) &_winference_wcovariance_, 3},
+    {"_rcpp_module_boot_module_mvnorm", (DL_FUNC) &_rcpp_module_boot_module_mvnorm, 0},
+    {"_rcpp_module_boot_module_waverage", (DL_FUNC) &_rcpp_module_boot_module_waverage, 0},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_winference(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

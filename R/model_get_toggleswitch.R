@@ -1,14 +1,14 @@
-#'@rdname get_toggleswitch
-#'@title Toggle switch model
-#'@description This function returns a list representing the toggle switch model
+#' @rdname get_toggleswitch
+#' @title Toggle switch model
+#' @description This function returns a list representing the toggle switch model
 #' of Bonassi, F. V., West, M., et al. (2015).
 #' Sequential Monte Carlo with adaptive weights for approximate Bayesian computation. Bayesian Analysis, 10(1):171–187.
-#'@return The list contains rprior, dprior (generate and evaluate the density of prior distribution),
+#' @return The list contains rprior, dprior (generate and evaluate the density of prior distribution),
 #' generate_randomness (generate data-generating variables), robservation (create synthetic
 #' data sets), parameter_names (useful for plotting), thetadim (dimension of parameter),
 #' ydim (dimension of observations), parameters (list of hyperparameters,
 #' to be passed to rprior,dprior,robservation)
-#'@export
+#' @export
 get_toggleswitch <- function(){
   library(truncnorm)
   rprior <- function(nparticles, parameters){
@@ -57,7 +57,8 @@ get_toggleswitch <- function(){
       v[,t+1] <- v[,t] + h * theta[2] / (1 + u[,t]^theta[4]) - h * (1 + 0.03 * v[,t])
       v[,t+1] <- v[,t+1] + h * 0.5 * rtruncnorm(nobservations, a = - v[,t+1]/(h*0.5))
     }
-    y <- u[,tau+1] + theta[5] + theta[5] * theta[6] * rnorm(nobservations) / (u[,tau+1]^theta[7])
+    lb = -(u[,tau+1] + theta[5]) / (theta[5] * theta[6]) * (u[,tau+1]^theta[7])
+    y <- u[,tau+1] + theta[5] + theta[5] * theta[6] * rtruncnorm(nobservations, a = lb) / (u[,tau+1]^theta[7])
     return(y)
   }
   parameters <- list()

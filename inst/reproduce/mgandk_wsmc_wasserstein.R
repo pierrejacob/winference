@@ -1,10 +1,11 @@
 library(winference)
-registerDoParallel(cores = detectCores())
+registerDoParallel(cores = detectCores()-2)
 rm(list = ls())
 setmytheme()
 set.seed(11)
 target <- get_mgandk()
-prefix <- ""
+
+prefix = ""
 
 nobservations <- 500
 load(paste0(prefix, "mgandkdata.RData"))
@@ -13,7 +14,7 @@ target$simulate <- function(theta) target$robservation(nobservations, theta)
 
 library(transport)
 compute_d <- function(z){
-  sink(file = "~/tmp")
+  sink(file = paste0(prefix,"tmp"))
   wdistance <- exact_transport_distance(obs, z, 1, 2)
   sink(NULL)
   if (wdistance > 1e10){
@@ -21,6 +22,12 @@ compute_d <- function(z){
   }
   return(wdistance)
 }
+
+
+# #test
+# set.seed(11)
+# y_sim = target$simulat(target$rprior(1))
+# compute_d(y_sim)
 
 # thetas_ <- target$rprior(100, target$parameters)
 # y_sim <- list()
@@ -38,11 +45,11 @@ compute_d <- function(z){
 # thetas_[1,]
 # true_theta
 
-param_algo <- list(nthetas = 1024, nmoves = 1, proposal = mixture_rmixmod(),
-                   minimum_diversity = 0.5, R = 0, maxtrials = 1000)
+param_algo <- list(nthetas = 2048, nmoves = 1, proposal = mixture_rmixmod(),
+                   minimum_diversity = 0.5, R = 2, maxtrials = 100000)
 
 savefile <- paste0(prefix, "mgandk.wsmc.n", nobservations, ".wasserstein.RData")
-maxsimulation <- 1e6
+maxsimulation <- 2e6
 results <- wsmc(compute_d, target, param_algo, savefile = savefile, maxsimulation = maxsimulation)
 load(savefile)
 # results$param_algo$maxtrials <- 10000

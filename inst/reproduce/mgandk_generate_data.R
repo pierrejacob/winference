@@ -1,10 +1,10 @@
 library(winference)
-registerDoParallel(cores = 6)
+registerDoParallel(cores = detectCores())
 rm(list = ls())
 setmytheme()
 set.seed(11)
 target <- get_mgandk()
-prefix <- ""
+prefix = ""
 
 nobservations <- 10000
 true_theta <- c(3, 1, 1, 0.5, 4, 0.5, 2, 0.4, 0.6)

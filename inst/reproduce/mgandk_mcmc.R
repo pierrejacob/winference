@@ -1,23 +1,24 @@
 library(winference)
-registerDoParallel(cores = 6)
+registerDoParallel(cores = detectCores())
 rm(list = ls())
 setmytheme()
 set.seed(11)
 target <- get_mgandk()
-prefix <- ""
+
+prefix = ""
 
 nobservations <- 500
 load(paste0(prefix, "mgandkdata.RData"))
 obs <- obs[,1:nobservations]
 # load ABC posterior
-load(paste0(prefix, "mgandk.wsmc.n1000.hilbert.RData"))
+load(paste0(prefix, "mgandk.wsmc.n",nobservations,".hilbert.RData"))
 thetas <- tail(results$thetas_history, 1)[[1]]
 theta_init <- thetas[sample(x = 1:nrow(thetas), 8, replace = TRUE),]
 colMeans(thetas)
 cov <- cov(thetas)
 # test log-likelihood
 target$loglikelihood(theta_init, obs)
-tuning_parameters <- list(niterations = 100000, nchains = nrow(theta_init),
+tuning_parameters <- list(niterations = 150000, nchains = nrow(theta_init),
                           cov_proposal = cov,
                           adaptation = 1000, init_chains = theta_init)
 mhfile <- paste0(prefix, "mgandk.mcmc.n", nobservations, ".mh.initfromABC.RData")

@@ -2,122 +2,130 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cost_matrix_L1_ <- function(x, y) {
-    .Call('winference_cost_matrix_L1_', PACKAGE = 'winference', x, y)
+    .Call('_winference_cost_matrix_L1_', PACKAGE = 'winference', x, y)
 }
 
 cost_matrix_L2_ <- function(x, y) {
-    .Call('winference_cost_matrix_L2_', PACKAGE = 'winference', x, y)
+    .Call('_winference_cost_matrix_L2_', PACKAGE = 'winference', x, y)
 }
 
 cost_matrix_Lp_ <- function(x, y, p) {
-    .Call('winference_cost_matrix_Lp_', PACKAGE = 'winference', x, y, p)
+    .Call('_winference_cost_matrix_Lp_', PACKAGE = 'winference', x, y, p)
 }
 
 gandkinversecdf_ <- function(x, theta) {
-    .Call('winference_gandkinversecdf_', PACKAGE = 'winference', x, theta)
+    .Call('_winference_gandkinversecdf_', PACKAGE = 'winference', x, theta)
 }
 
 gandkinversecdf_givennormals_ <- function(normals, theta) {
-    .Call('winference_gandkinversecdf_givennormals_', PACKAGE = 'winference', normals, theta)
+    .Call('_winference_gandkinversecdf_givennormals_', PACKAGE = 'winference', normals, theta)
 }
 
 gandkcdf_ <- function(y, theta, maxsteps = 1000L, tolerance = 1e-10, lower = 1e-20, upper = 1-1e-20) {
-    .Call('winference_gandkcdf_', PACKAGE = 'winference', y, theta, maxsteps, tolerance, lower, upper)
+    .Call('_winference_gandkcdf_', PACKAGE = 'winference', y, theta, maxsteps, tolerance, lower, upper)
 }
 
 hilbert_order_ <- function(x) {
-    .Call('winference_hilbert_order_', PACKAGE = 'winference', x)
+    .Call('_winference_hilbert_order_', PACKAGE = 'winference', x)
 }
 
 levydriven_rtransition_rand_cpp <- function(nparticles, theta) {
-    .Call('winference_levydriven_rtransition_rand_cpp', PACKAGE = 'winference', nparticles, theta)
+    .Call('_winference_levydriven_rtransition_rand_cpp', PACKAGE = 'winference', nparticles, theta)
 }
 
 median_rcpp <- function(x) {
-    .Call('winference_median_rcpp', PACKAGE = 'winference', x)
+    .Call('_winference_median_rcpp', PACKAGE = 'winference', x)
 }
 
 mmd_c <- function(first_term, eps, x, y) {
-    .Call('winference_mmd_c', PACKAGE = 'winference', first_term, eps, x, y)
+    .Call('_winference_mmd_c', PACKAGE = 'winference', first_term, eps, x, y)
 }
 
 rmvnorm <- function(nsamples, mean, covariance) {
-    .Call('winference_rmvnorm', PACKAGE = 'winference', nsamples, mean, covariance)
+    .Call('_winference_rmvnorm', PACKAGE = 'winference', nsamples, mean, covariance)
 }
 
 dmvnorm <- function(x, mean, covariance) {
-    .Call('winference_dmvnorm', PACKAGE = 'winference', x, mean, covariance)
+    .Call('_winference_dmvnorm', PACKAGE = 'winference', x, mean, covariance)
 }
 
 one_step_pz_vector <- function(xparticles, alphas, t, parameters) {
-    .Call('winference_one_step_pz_vector', PACKAGE = 'winference', xparticles, alphas, t, parameters)
+    .Call('_winference_one_step_pz_vector', PACKAGE = 'winference', xparticles, alphas, t, parameters)
 }
 
 pz_generate_randomness_cpp <- function(nparticles, datalength) {
-    .Call('winference_pz_generate_randomness_cpp', PACKAGE = 'winference', nparticles, datalength)
+    .Call('_winference_pz_generate_randomness_cpp', PACKAGE = 'winference', nparticles, datalength)
 }
 
 pz_perturb_randomness_cpp <- function(randomness, rho) {
-    .Call('winference_pz_perturb_randomness_cpp', PACKAGE = 'winference', randomness, rho)
+    .Call('_winference_pz_perturb_randomness_cpp', PACKAGE = 'winference', randomness, rho)
 }
 
 systematic_resampling_ <- function(weights) {
-    .Call('winference_systematic_resampling_', PACKAGE = 'winference', weights)
+    .Call('_winference_systematic_resampling_', PACKAGE = 'winference', weights)
 }
 
 swapsweep <- function(permutation, Cp, totalcost) {
-    .Call('winference_swapsweep', PACKAGE = 'winference', permutation, Cp, totalcost)
+    .Call('_winference_swapsweep', PACKAGE = 'winference', permutation, Cp, totalcost)
 }
 
 systematic_resampling_n_ <- function(weights, ndraws, u) {
-    .Call('winference_systematic_resampling_n_', PACKAGE = 'winference', weights, ndraws, u)
+    .Call('_winference_systematic_resampling_n_', PACKAGE = 'winference', weights, ndraws, u)
+}
+
+cont_hist <- function(x, h, prob, mids) {
+    .Call('_winference_cont_hist', PACKAGE = 'winference', x, h, prob, mids)
+}
+
+summary_full <- function(y, h, prob_mat, mids) {
+    .Call('_winference_summary_full', PACKAGE = 'winference', y, h, prob_mat, mids)
 }
 
 wasserstein_SAG_ <- function(mu, nu, cost, epsilon, niterations, stepsize) {
-    .Call('winference_wasserstein_SAG_', PACKAGE = 'winference', mu, nu, cost, epsilon, niterations, stepsize)
+    .Call('_winference_wasserstein_SAG_', PACKAGE = 'winference', mu, nu, cost, epsilon, niterations, stepsize)
 }
 
 wasserstein_SAG_auto_ <- function(mu, nu, cost, epsilon, tolerance, stepsize, maxiterations) {
-    .Call('winference_wasserstein_SAG_auto_', PACKAGE = 'winference', mu, nu, cost, epsilon, tolerance, stepsize, maxiterations)
+    .Call('_winference_wasserstein_SAG_auto_', PACKAGE = 'winference', mu, nu, cost, epsilon, tolerance, stepsize, maxiterations)
 }
 
 wasserstein_ <- function(p_, q_, cost_matrix_, epsilon, niterations) {
-    .Call('winference_wasserstein_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, niterations)
+    .Call('_winference_wasserstein_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, niterations)
 }
 
 wasserstein_auto_ <- function(p_, q_, cost_matrix_, epsilon, desired_alpha) {
-    .Call('winference_wasserstein_auto_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, desired_alpha)
+    .Call('_winference_wasserstein_auto_', PACKAGE = 'winference', p_, q_, cost_matrix_, epsilon, desired_alpha)
 }
 
 eucl_distn_cpp <- function(x, y) {
-    .Call('winference_eucl_distn_cpp', PACKAGE = 'winference', x, y)
+    .Call('_winference_eucl_distn_cpp', PACKAGE = 'winference', x, y)
 }
 
 h_cpp <- function(x, v, nu, y, epsilon, p) {
-    .Call('winference_h_cpp', PACKAGE = 'winference', x, v, nu, y, epsilon, p)
+    .Call('_winference_h_cpp', PACKAGE = 'winference', x, v, nu, y, epsilon, p)
 }
 
 grad_h_cpp <- function(x, v, nu, y, epsilon, p) {
-    .Call('winference_grad_h_cpp', PACKAGE = 'winference', x, v, nu, y, epsilon, p)
+    .Call('_winference_grad_h_cpp', PACKAGE = 'winference', x, v, nu, y, epsilon, p)
 }
 
 dw_sgd_v_thresh_cpp <- function(samples, c, nu, y, epsilon, thresh, p) {
-    .Call('winference_dw_sgd_v_thresh_cpp', PACKAGE = 'winference', samples, c, nu, y, epsilon, thresh, p)
+    .Call('_winference_dw_sgd_v_thresh_cpp', PACKAGE = 'winference', samples, c, nu, y, epsilon, thresh, p)
 }
 
 dw_sgd_v_cpp <- function(samples, c, nu, y, epsilon, p) {
-    .Call('winference_dw_sgd_v_cpp', PACKAGE = 'winference', samples, c, nu, y, epsilon, p)
+    .Call('_winference_dw_sgd_v_cpp', PACKAGE = 'winference', samples, c, nu, y, epsilon, p)
 }
 
 dw_est_cpp <- function(samples_for_est, v, nu, y, epsilon, p) {
-    .Call('winference_dw_est_cpp', PACKAGE = 'winference', samples_for_est, v, nu, y, epsilon, p)
+    .Call('_winference_dw_est_cpp', PACKAGE = 'winference', samples_for_est, v, nu, y, epsilon, p)
 }
 
 wmean_ <- function(x, unnormalized_w) {
-    .Call('winference_wmean_', PACKAGE = 'winference', x, unnormalized_w)
+    .Call('_winference_wmean_', PACKAGE = 'winference', x, unnormalized_w)
 }
 
 wcovariance_ <- function(x, unnormalized_w, xbar) {
-    .Call('winference_wcovariance_', PACKAGE = 'winference', x, unnormalized_w, xbar)
+    .Call('_winference_wcovariance_', PACKAGE = 'winference', x, unnormalized_w, xbar)
 }
 

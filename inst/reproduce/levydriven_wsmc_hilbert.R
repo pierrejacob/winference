@@ -1,5 +1,5 @@
 library(winference)
-registerDoParallel(cores = 6)
+registerDoParallel(cores = 10)
 rm(list = ls())
 setmytheme()
 
@@ -37,8 +37,20 @@ param_algo <- list(nthetas = 1024, nmoves = 1, proposal = mixture_rmixmod(),
                    minimum_diversity = 0.5, R = 2, maxtrials = 1000)
 
 filename <- paste0(prefix, "levydriven.n", nobservations, ".lag", lagvalue, ".wsmc.hilbert.RData")
-results <- wsmc(compute_d, target, param_algo, savefile = filename, maxtime = 60*60)
+results <- wsmc(compute_d, target, param_algo, savefile = filename, maxsimulation = 3e5)
 load(file = filename)
 # results <- wsmc_continue(results, savefile = filename, maxtime = 30*60)
 
+library(gridExtra)
 grid.arrange(plot_threshold_time(results) + scale_y_log10(), plot_ncomputed(results))
+plot_bivariate(results, 1, 2)
+plot_bivariate(results, 3, 4)
+plot_bivariate(results, 4, 5)
+#
+# ## timings
+# library(microbenchmark)
+# microbenchmark(target$simulate(true_theta), times = 100)
+#
+# microbenchmark(compute_d(target$simulate(true_theta)), times = 100)
+
+

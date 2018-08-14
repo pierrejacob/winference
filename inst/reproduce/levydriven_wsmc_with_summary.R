@@ -1,5 +1,5 @@
 library(winference)
-registerDoParallel(cores = detectCores())
+registerDoParallel(cores = 10)
 rm(list = ls())
 setmytheme()
 
@@ -62,7 +62,33 @@ results2$param_algo$threshold <- max(ds)
 results2$distances_history[[length(results2$distances_history)]] <- ds
 results2$param_algo$proposal <- mixture_rmixmod()
 #
-results2 <- wsmc_continue(results2, savefile = filename2, maxtime = 3*60*60)
+results2 <- wsmc_continue(results2, savefile = filename2, maxtime = 60*60)
+# load(filename2)
+# library(Rmixmod)
+# results2 <- wsmc_continue(results, savefile = filename2, maxtime = 2*60*60)
 #
+library(gridExtra)
 grid.arrange(plot_threshold_time(results2) + scale_y_log10(), plot_ncomputed(results2))
 #
+plot_bivariate(results2, 4, 5)
+plot_marginal(results2, 1)
+plot_marginal(results2, 2)
+plot_marginal(results2, 4) + scale_x_log10()
+plot_marginal(results2, 5) + scale_x_log10()
+
+# names(results2)
+# results2$param_algo$proposal$param_update()
+# results2$thetas_history %>% length
+thetas <- results2$thetas_history[[results2$thetas_history %>% length]]
+fit <- mixmodCluster(data = data.frame(thetas), nbCluster = 5, dataType = "quantitative")
+results2$param_algo$proposal$r
+results2$param_algo$proposal$d
+
+
+##
+
+## timings
+library(microbenchmark)
+microbenchmark(target$simulate(true_theta), times = 100)
+microbenchmark(compute_d_summary(target$simulate(true_theta)), times = 100)
+

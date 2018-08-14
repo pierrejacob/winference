@@ -41,3 +41,11 @@ results <- wsmc(dsummary, target, param_algo, maxsimulation = 10^6, savefile = f
 # mle <- rowMeans(obs)
 # plot_bivariate(results, 1, 2, from = 10) + geom_vline(xintercept = mle[1]) + geom_hline(yintercept = mle[2])
 # plot_marginal(results, 1, from = 10)
+#
+# library(microbenchmark)
+# microbenchmark(dsummary(target$simulate(true_theta)), times = 1000)
+#
+# library(microbenchmark)
+# microbenchmark(target$simulate(true_theta), times = 1000)
+#
+

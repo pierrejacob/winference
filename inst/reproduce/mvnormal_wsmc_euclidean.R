@@ -43,3 +43,6 @@ load(filename)
 # mle <- rowMeans(obs)
 # plot_bivariate(results, 1, 2, from = 10) + geom_vline(xintercept = mle[1]) + geom_hline(yintercept = mle[2])
 # plot_marginal(results, 1, from = 10)
+
+library(microbenchmark)
+microbenchmark(deuclidean(target$simulate(true_theta)), times = 1000)

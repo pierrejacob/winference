@@ -56,6 +56,8 @@ figurefile <- paste0(prefix, "check.as6.dgp", dgpname, ".model", modelname, ".th
 g <- qplot(x = theta_seq, y = wp2, geom = "point") + xlab(expression(theta)) + ylab("Wasserstein distance")
 print(g)
 ggsave(filename = figurefile, plot = g, width = 7, height = 5)
+figurefile <- paste0(prefix, "check.as6.dgp", dgpname, ".model", modelname, ".theta-vs-wasserstein.png")
+ggsave(filename = figurefile, plot = g, width = 7, height = 5, dpi = 150)
 
 if (modelname == dgpname){
   figurefile <- paste0(prefix, "check.as6.dgp", dgpname, ".model", modelname, ".distancetheta.pdf")
@@ -67,6 +69,8 @@ if (modelname == dgpname){
   g <- qplot(x = x, y = ysqrt, geom = "point") + geom_smooth(method = "lm", se = FALSE) + xlab(expression(abs(theta-2))) + ylab("sqrt(Wasserstein distance)")
   print(g)
   ggsave(filename = figurefile, plot = g, width = 7, height = 5)
+  figurefile <- paste0(prefix, "check.as6.dgp", dgpname, ".model", modelname, ".distancetheta.png")
+  ggsave(filename = figurefile, plot = g, width = 7, height = 5, dpi = 150)
 }
 
 

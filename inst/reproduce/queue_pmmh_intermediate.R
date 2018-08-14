@@ -4,7 +4,7 @@ rm(list = ls())
 setmytheme()
 
 set.seed(11)
-prefix <- ""
+prefix = ""
 
 load(paste0(prefix, "50.intermediateobs.neal.Rdata"))
 obs <- matrix(obs, nrow = 1)

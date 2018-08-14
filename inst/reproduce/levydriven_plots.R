@@ -11,7 +11,7 @@ prefix <- ""
 # load data
 load(file = paste0(prefix, "levydrivendata.RData"))
 # number of observations
-nobservations <- 10000
+nobservations <- 1000
 # lag value
 lagvalue <- 1
 # subset observations
@@ -38,15 +38,16 @@ g <- ggplot(wsmc.df, aes(x = mu, y = beta, colour = step, group = step)) + geom_
 g <- g + theme(legend.position = "none") + xlab(expression(mu)) + ylab(expression(beta))
 g <- g + scale_colour_gradient2(midpoint = floor(nsteps1/2))
 g <- g + geom_vline(xintercept = true_theta[1]) + geom_hline(yintercept = true_theta[2])
-# g
-ggsave(filename = paste0(prefix, "levydriven_mubeta.png"), plot = g, width = 7, height = 5, dpi = 150)
+g
+# ggsave(filename = paste0(prefix, "levydriven_mubeta.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 g <- ggplot(wsmc.df, aes(x = xi, y = omega2, colour = step, group = step)) + geom_point(alpha = 0.5)
 g <- g + theme(legend.position = "none") + xlab(expression(xi)) + ylab(expression(omega^2))
 g <- g + scale_colour_gradient2(midpoint = floor(nsteps1/2))
 g <- g + geom_vline(xintercept = true_theta[3]) + geom_hline(yintercept = true_theta[4])
 g <- g + scale_y_log10() + scale_x_log10()
-ggsave(filename = paste0(prefix, "levydriven_xiomega2.png"), plot = g, width = 7, height = 5, dpi = 150)
+g
+# ggsave(filename = paste0(prefix, "levydriven_xiomega2.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 g <- ggplot(wsmc.df, aes(x = lambda, colour = step, group = step)) + geom_density(aes(y = ..density..))
 g <- g + theme(legend.position = "none") + xlab(expression(lambda))
@@ -54,7 +55,8 @@ g <- g + scale_color_gradient(low = rgb(1,0.5,0.5), high = "darkblue")
 g <- g + geom_vline(xintercept = true_theta[5])
 g <- g + scale_x_log10(breaks = c(0.001,0.01, 0.1, 1), limits = c(1e-4,10))
 g
-ggsave(filename = paste0(prefix, "levydriven_lambda.pdf"), plot = g, width = 7, height = 5)
+# ggsave(filename = paste0(prefix, "levydriven_lambda.pdf"), plot = g, width = 7, height = 5)
+# ggsave(filename = paste0(prefix, "levydriven_lambda.png"), plot = g, width = 7, height = 5, dpi = 150)
 #
 
 # plot of distances
@@ -75,7 +77,7 @@ fs <- as.numeric(foreach(i = 1:results1$param_algo$nthetas, .combine = c) %dorng
 g <- qplot(x = results1$thetas_history[[nsteps1]][,5], y = fs, geom = "point") + geom_hline(yintercept = f_obs, linetype = 2)
 g <- g + xlab(expression(lambda)) + ylab("ACF summary")
 g
-ggsave(filename = paste0(prefix, "levydriven_acfsummary.png"), plot = g, width = 7, height = 5, dpi = 150)
+# ggsave(filename = paste0(prefix, "levydriven_acfsummary.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 # does not match at all
 filename2 <- paste0(prefix, "levydriven.n", nobservations, ".lag", lagvalue, ".wsmc.hilbert.summary.RData")
@@ -102,7 +104,7 @@ g <- g + theme(legend.position = "none") + xlab(expression(omega^2)) + ylab(expr
 g <- g + scale_colour_gradient2(midpoint = floor(nsteps1 + (nsteps2-nsteps1)/2))
 g <- g + geom_vline(xintercept = true_theta[4]) + geom_hline(yintercept = true_theta[5])
 g
-ggsave(filename = paste0(prefix, "levydriven_omega2lambda.png"), plot = g, width = 7, height = 5, dpi = 150)
+# ggsave(filename = paste0(prefix, "levydriven_omega2lambda.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 g <- ggplot(wsmc2.df  %>% filter(step > nsteps1), aes(x = omega2, colour = step, group = step)) + geom_density(aes(y = ..density..))
 g <- g + theme(legend.position = "none") + xlab(expression(omega^2)) + geom_vline(xintercept = true_theta[4])
@@ -135,6 +137,7 @@ g <- g + theme(legend.position = "none") + xlab(expression(omega^2))
 g <- g + scale_color_gradient(low = rgb(1,0.5,0.5), high = "darkblue") + geom_vline(xintercept = true_theta[4])
 g
 ggsave(filename = paste0(prefix, "levydriven_omega2_summar.pdf"), plot = g, width = 7, height = 5)
+ggsave(filename = paste0(prefix, "levydriven_omega2_summar.png"), plot = g, width = 7, height = 5, dpi = 150)
 
 #
 g <- ggplot(wsmc2.df  %>% filter(step > nsteps1), aes(x = lambda, colour = step, group = step)) + geom_density(aes(y = ..density..))
@@ -143,3 +146,4 @@ g <- g + scale_color_gradient(low = rgb(1,0.5,0.5), high = "darkblue") + geom_vl
 g <- g + scale_x_log10(breaks = c(0.001,0.01, 0.1, 1), limits = c(1e-4,10))
 g
 ggsave(filename = paste0(prefix, "levydriven_lambda_summar.pdf"), plot = g, width = 7, height = 5)
+ggsave(filename = paste0(prefix, "levydriven_lambda_summar.png"), plot = g, width = 7, height = 5, dpi = 150)

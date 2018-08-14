@@ -71,6 +71,7 @@ if (regime == "intermediate"){
 }
 g1
 ggsave(plot = g1, filename = paste0(prefix, "queue_", regime, "_theta1.pdf"), width = fig.width, height = fig.height)
+ggsave(plot = g1, filename = paste0(prefix, "queue_", regime, "_theta1.png"), width = fig.width, height = fig.height, dpi = 150)
 
 g2 <- ggplot(pmmh.df %>% filter(iteration > burnin), aes(x = theta1+theta2minus1)) + geom_density(aes(y = ..density.., fill = "Posterior", colour = "Posterior"), alpha = 0.5)
 # g2 <- g2 + geom_density(data = pmmh.alive.df %>% filter(iteration > burnin), aes(y = ..density.., fill = "Posterior 2", colour = "Posterior 2"),  alpha = 0.5)
@@ -85,6 +86,7 @@ if (regime == "intermediate"){
                         aes(x = x, y = y, colour = method, label = method), size = 8) + theme(legend.position = "none")
 }
 ggsave(plot = g2, filename = paste0(prefix, "queue_", regime, "_theta2.pdf"), width = fig.width, height = fig.height)
+ggsave(plot = g2, filename = paste0(prefix, "queue_", regime, "_theta2.png"), width = fig.width, height = fig.height, dpi = 150)
 
 g3 <- ggplot(pmmh.df %>% filter(iteration > burnin), aes(x = theta3)) + geom_density(aes(y = ..density.., fill = "Posterior", colour = "Posterior"), alpha = 0.5)
 # g3 <- g3 + geom_density(data = pmmh.alive.df %>% filter(iteration > burnin), aes(y = ..density.., fill = "Posterior 2", colour = "Posterior 2"),  alpha = 0.5)
@@ -98,6 +100,7 @@ if (regime == "intermediate"){
                                           method = c("Posterior", "Wasserstein", "W + constraint")),
                         aes(x = x, y = y, colour = method, label = method), size = 8) + theme(legend.position = "none")
 }
+ggsave(plot = g3, filename = paste0(prefix, "queue_", regime, "_theta3.png"), width = fig.width, height = fig.height, dpi = 150)
 ggsave(plot = g3, filename = paste0(prefix, "queue_", regime, "_theta3.pdf"), width = fig.width, height = fig.height)
 
 

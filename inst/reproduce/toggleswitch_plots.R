@@ -18,6 +18,7 @@ g <- qplot(x = obs, geom = "blank") + geom_histogram(aes(y = ..density..))
 g <- g + xlab("y")
 g
 ggsave(filename = paste0(prefix, "toggleswitch_data.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_data.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 filename <- paste0(prefix, "toggleswitchwsmc.n", nobservations, ".RData")
 load(filename)
@@ -36,6 +37,7 @@ g <- g + xlab(expression(alpha[1]))
 g <- g + geom_vline(xintercept = true_theta[1])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal1.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal1.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = alpha_2, colour = step, group = step))
 g <- g + geom_density(aes(y = ..density..))
@@ -44,6 +46,7 @@ g <- g + xlab(expression(alpha[2]))
 g <- g + geom_vline(xintercept = true_theta[2])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal2.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal2.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = beta_1, colour = step, group = step))
@@ -53,6 +56,7 @@ g <- g + xlab(expression(beta[1]))
 g <- g + geom_vline(xintercept = true_theta[3])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal3.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal3.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = beta_2, colour = step, group = step))
 g <- g + geom_density(aes(y = ..density..))
@@ -61,6 +65,7 @@ g <- g + xlab(expression(beta[2]))
 g <- g + geom_vline(xintercept = true_theta[4])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal4.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal4.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = mu, colour = step, group = step))
 g <- g + geom_density(aes(y = ..density..))
@@ -69,6 +74,7 @@ g <- g + xlab(expression(mu))
 g <- g + geom_vline(xintercept = true_theta[5])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal5.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal5.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = sigma, colour = step, group = step))
 g <- g + geom_density(aes(y = ..density..))
@@ -77,6 +83,7 @@ g <- g + xlab(expression(sigma))
 g <- g + geom_vline(xintercept = true_theta[6])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal6.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal6.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 g <- ggplot(wsmc.df %>% filter(step > 0), aes(x = gamma, colour = step, group = step))
 g <- g + geom_density(aes(y = ..density..))
@@ -85,6 +92,7 @@ g <- g + xlab(expression(gamma))
 g <- g + geom_vline(xintercept = true_theta[7])
 g
 ggsave(filename = paste0(prefix, "toggleswitch_marginal7.pdf"), plot = g, width = fig.width, height = fig.height)
+ggsave(filename = paste0(prefix, "toggleswitch_marginal7.png"), plot = g, width = fig.width, height = fig.height, dpi = 150)
 
 
 

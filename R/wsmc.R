@@ -234,7 +234,7 @@ wsmc_one_step <- function(thetas, distances, latest_y, compute_d, target, param_
   thetas <- thetas[ancestors,,drop=F]
   distances <- distances[ancestors]
   old_latest_y <- latest_y
-  for (i in 1:nrow(thetas)){
+  for (i in 1:(dim(thetas)[1])){
     latest_y[[i]] <- old_latest_y[[ancestors[i]]]
   }
   weights <- rep(1/param_algo$nthetas, param_algo$nthetas)

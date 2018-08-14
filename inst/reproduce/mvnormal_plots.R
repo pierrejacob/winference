@@ -92,6 +92,9 @@ g2
 ggsave(filename = paste0(prefix, "mvnorm.posterior1.pdf"), plot = g1, width = 7.5, height = 7)
 ggsave(filename = paste0(prefix, "mvnorm.posterior2.pdf"), plot = g2, width = 7.5, height = 7)
 
+ggsave(filename = paste0(prefix, "mvnorm.posterior1.png"), plot = g1, width = 7.5, height = 7, dpi = 150)
+ggsave(filename = paste0(prefix, "mvnorm.posterior2.png"), plot = g2, width = 7.5, height = 7, dpi = 150)
+
 library(gridExtra)
 grid.arrange(g1 + theme(legend.position = "none"), g2 + theme(legend.position = "none"), nrow = 1)
 
@@ -137,6 +140,7 @@ g <- g + geom_label(data = data.frame(x = c(5e5,5e5,5e5), y = c(0.05, 0.01, 0.5)
                       aes(x = x, y = y, colour = method, label = method), size = 8) + theme(legend.position = "none")
 g
 ggsave(filename = paste0(prefix, "mvnorm.w2post.distances.pdf"), plot = g, width = 7.5, height = 7)
+ggsave(filename = paste0(prefix, "mvnorm.w2post.distances.png"), plot = g, width = 7.5, height = 7, dpi = 150)
 
 
 g <- ggplot(w_to_post_wasserstein, aes(x = times, y = w)) + geom_line(aes(colour = "Wasserstein")) + geom_point(aes(colour = "Wasserstein"))
