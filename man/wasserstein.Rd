@@ -4,7 +4,7 @@
 \alias{wasserstein}
 \title{wasserstein}
 \usage{
-wasserstein(p, q, cost_matrix, epsilon, niterations)
+wasserstein(a, b, p = 1, tplan = NULL, prob = TRUE, ...)
 }
 \value{
 a list with "distances", "transportmatrix", "u" and "v"

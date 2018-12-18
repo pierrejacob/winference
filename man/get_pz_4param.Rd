@@ -3,9 +3,6 @@
 \name{get_pz_4param}
 \alias{get_pz_4param}
 \title{Phytoplankton-zooplankton model}
-\usage{
-get_pz_4param()
-}
 \value{
 The list contains rprior, dprior (generate and evaluate the density of prior distribution),
 generate_randomness (generate data-generating variables), robservation (create synthetic

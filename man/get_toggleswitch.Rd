@@ -3,9 +3,6 @@
 \name{get_toggleswitch}
 \alias{get_toggleswitch}
 \title{Toggle switch model}
-\usage{
-get_toggleswitch()
-}
 \value{
 The list contains rprior, dprior (generate and evaluate the density of prior distribution),
 generate_randomness (generate data-generating variables), robservation (create synthetic

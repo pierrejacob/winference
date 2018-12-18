@@ -1,4 +1,4 @@
-#' @rdname get_toggleswitch
+#' @name get_toggleswitch
 #' @title Toggle switch model
 #' @description This function returns a list representing the toggle switch model
 #' of Bonassi, F. V., West, M., et al. (2015).

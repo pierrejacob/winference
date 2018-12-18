@@ -1,18 +1,3 @@
-#'@rdname wsmc
-#'@title Adaptive SMC sampler with r-hit kernels
-#'@description Runs an adaptive SMC sampler with r-hit kernels
-#'
-#' References for the r-hit kernels:
-#' \itemize{
-#' \item Lee, A. (2012). On the choice of MCMC kernels for approximate Bayesian computation with SMC samplers.
-#'  In Proceedings of the 2012 Winter Simulation Conference, pages 304–315.
-#' \item Lee, A. and Łatuszyński, K. (2014). Variance bounding and geometric ergodicity of Markov chain Monte Carlo kernels for approximate Bayesian computation. Biometrika, 101(3):655–671.
-#'}
-#'@return a list containing
-#' \itemize{
-#' \item thetas_history (all theta particles at all steps),
-#'  \item distances_history, threshold_history, param_algo
-#'  }
 #'@export
 wsmc <- function(compute_d, target, param_algo, savefile = NULL, parallel = TRUE, debug = FALSE, maxstep = Inf, maxtime = Inf, maxsimulation = Inf){
   if (is.infinite(maxstep) && is.infinite(maxtime) && is.infinite(maxsimulation)){

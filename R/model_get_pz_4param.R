@@ -1,4 +1,4 @@
-#'@rdname get_pz_4param
+#'@name get_pz_4param
 #'@title Phytoplankton-zooplankton model
 #'@description This function returns a list representing
 #' a Lotka-Volterra type model for plankton. See
