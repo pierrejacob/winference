@@ -3,6 +3,9 @@
 \name{get_pz_4param}
 \alias{get_pz_4param}
 \title{Phytoplankton-zooplankton model}
+\usage{
+get_pz_4param()
+}
 \value{
 The list contains rprior, dprior (generate and evaluate the density of prior distribution),
 generate_randomness (generate data-generating variables), robservation (create synthetic
@@ -13,5 +16,5 @@ to be passed to rprior,dprior,robservation)
 \description{
 This function returns a list representing
 a Lotka-Volterra type model for plankton. See
-Jones, E., Parslow, J., and Murray, L. (2010). A Bayesian approach to state and parameter estimation in a phytoplankton-zooplankton model. Australian Meteorological and Oceanographic Journal, 59:7–16.
+Jones, E., Parslow, J., and Murray, L. (2010). A Bayesian approach to state and parameter estimation in a phytoplankton-zooplankton model. Australian Meteorological and Oceanographic Journal, 59:7-16.
 }

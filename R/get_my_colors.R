@@ -8,6 +8,7 @@ get_my_colors <- function(){
            "Wasserstein"="darkblue",
            "Euclidean"="#009E73",
            "Swap" = "purple",
+           "Rej. Summary" = "purple",
            "W + constraint" = "darkgreen"
   ))
 }

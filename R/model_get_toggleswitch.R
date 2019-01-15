@@ -2,7 +2,7 @@
 #' @title Toggle switch model
 #' @description This function returns a list representing the toggle switch model
 #' of Bonassi, F. V., West, M., et al. (2015).
-#' Sequential Monte Carlo with adaptive weights for approximate Bayesian computation. Bayesian Analysis, 10(1):171–187.
+#' Sequential Monte Carlo with adaptive weights for approximate Bayesian computation. Bayesian Analysis, 10(1):171-187.
 #' @return The list contains rprior, dprior (generate and evaluate the density of prior distribution),
 #' generate_randomness (generate data-generating variables), robservation (create synthetic
 #' data sets), parameter_names (useful for plotting), thetadim (dimension of parameter),
