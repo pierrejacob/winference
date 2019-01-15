@@ -4,6 +4,11 @@
 .Rproj.user
 .Rhistory
 .RData
+*.RData
+inst/reproducepointestimation/*.RData
+inst/reproducepointestimation/*.Rdata
+inst/reproducepointestimation/*.pdf
+inst/reproducepointestimation/*.png
 .Ruserdata
 .DS_Store
 src/*.o
@@ -12,4 +17,5 @@ src/*.dll
 TODO
 inst/tutorials/*cache*/
 inst/tutorials/*files*/
+inst/reproduce-old/
 
