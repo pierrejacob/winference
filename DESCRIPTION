@@ -2,7 +2,7 @@ Package: winference
 Type: Package
 Title: Approximate Bayesian Computation with the Wasserstein distance
 Version: 0.1.2
-Author: Espen Bernton, Pierre E. Jacob
+Author: Espen Bernton, Mathieu Gerber, Pierre E. Jacob
 Maintainer: Pierre E. Jacob <pierre.jacob@fas.harvard.edu>
 Description: Parameter inference for generative models, by using an approximate Bayesian 
   computation approach where summary statistics are replaced by the Wasserstein distance
